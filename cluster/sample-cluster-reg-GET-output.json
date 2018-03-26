@@ -1,0 +1,64 @@
+{
+  "kind": "ClusterList",
+  "apiVersion": "clusterregistry.k8s.io/v1alpha1",
+  "metadata": {
+    "selfLink": "/apis/clusterregistry.k8s.io/v1alpha1/clusters",
+    "resourceVersion": "8"
+  },
+  "items": [
+    {
+      "metadata": {
+        "name": "minikube-cluster",
+        "selfLink": "/apis/clusterregistry.k8s.io/v1alpha1/clusters/minikube-cluster",
+        "uid": "67cf61b9-312b-11e8-9d11-0a580ae94019",
+        "resourceVersion": "8",
+        "creationTimestamp": "2018-03-26T19:25:12Z",
+        "annotations": {
+          "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"clusterregistry.k8s.io/v1alpha1\",\"kind\":\"Cluster\",\"metadata\":{\"annotations\":{},\"name\":\"minikube-cluster\",\"namespace\":\"\"},\"spec\":{\"kubernetesApiEndpoints\":{\"serverEndpoints\":[{\"clientCidr\":\"0.0.0.0/0\",\"serverAddress\":\"10.0.2.15:8443\"}]}}}\n"
+        }
+      },
+      "spec": {
+        "kubernetesApiEndpoints": {
+          "serverEndpoints": [
+            {
+              "clientCIDR": "0.0.0.0/0",
+              "serverAddress": "10.0.2.15:8443"
+            }
+          ]
+        },
+        "authInfo": {
+          "providers": null
+        },
+        "cloudProvider": null
+      },
+      "status": null
+    },
+    {
+      "metadata": {
+        "name": "test-cluster",
+        "selfLink": "/apis/clusterregistry.k8s.io/v1alpha1/clusters/test-cluster",
+        "uid": "62e9393e-3128-11e8-9d11-0a580ae94019",
+        "resourceVersion": "2",
+        "creationTimestamp": "2018-03-26T19:03:36Z",
+        "annotations": {
+          "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"clusterregistry.k8s.io/v1alpha1\",\"kind\":\"Cluster\",\"metadata\":{\"annotations\":{},\"name\":\"test-cluster\",\"namespace\":\"\"},\"spec\":{\"kubernetesApiEndpoints\":{\"serverEndpoints\":[{\"clientCidr\":\"0.0.0.0/0\",\"serverAddress\":\"100.0.0.0\"}]}}}\n"
+        }
+      },
+      "spec": {
+        "kubernetesApiEndpoints": {
+          "serverEndpoints": [
+            {
+              "clientCIDR": "0.0.0.0/0",
+              "serverAddress": "100.0.0.0"
+            }
+          ]
+        },
+        "authInfo": {
+          "providers": null
+        },
+        "cloudProvider": null
+      },
+      "status": null
+    }
+  ]
+}
