@@ -1,0 +1,27 @@
+{
+  "StatusCode": 200,
+  "Raw": [
+    {
+      "Metadata": {
+        "Name": "MetaName1"
+      },
+      "Template": {
+        "Name": "template name"
+      },
+      "Dependencies": {},
+      "Config": {},
+      "Files": {}
+    },
+    {
+      "Metadata": {
+        "Name": "Metaname2"
+      },
+      "Template": {
+        "Name": "template name"
+      },
+      "Dependencies": {},
+      "Config": {},
+      "Files": {}
+    }
+  ]
+}

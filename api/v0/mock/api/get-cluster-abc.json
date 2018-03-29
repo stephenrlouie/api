@@ -1,0 +1,9 @@
+{
+  "StatusCode": 201,
+  "Raw":
+    {
+      "CluterStuff": {
+        "Name": "Meta.Name"
+      }
+    }
+}

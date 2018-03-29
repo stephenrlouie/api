@@ -1,0 +1,15 @@
+{
+  "StatusCode": 201,
+  "Raw":
+    {
+      "Metadata": {
+        "Name": "Meta.Name"
+      },
+      "Template": {
+        "Name": "template name"
+      },
+      "Dependencies": {},
+      "Config": {},
+      "Files": {}
+    }
+}
