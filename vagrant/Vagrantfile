@@ -1,0 +1,52 @@
+# -*k mode: ruby -*-
+# vi: set ft=ruby :
+
+$num_clusters = 2
+if ENV["NUM_CLUSTERS"] && ENV["NUM_CLUSTERS"].to_i > 0
+    $num_clusters = ENV["NUM_CLUSTERS"].to_i
+end
+$box = ENV["VM_NAME"] || "intelligent-edge-admin/centos-k8s-1.10.0"
+$box_version = ENV["VM_VERSION"] || "1.0.0"
+
+$reset_kube_config = <<-SCRIPT
+sudo su
+swapoff -a
+setenforce 0
+sysctl --system
+kubeadm reset
+echo "Running kubeadm init..."
+JOIN_CMD=$(kubeadm init --apiserver-advertise-address ${MYIP} --pod-network-cidr 10.1.0.0/16 | grep "kubeadm join")
+echo "$JOIN_CMD"
+cp /etc/kubernetes/admin.conf /home/vagrant/.kube/config
+chown vagrant:vagrant /home/vagrant/.kube/config
+sysctl net.bridge.bridge-nf-call-iptables=1
+export kubever=$(kubectl version | base64 | tr -d '\n')
+kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$kubever"
+kubectl taint nodes --all node-role.kubernetes.io/master-
+eval "$JOIN_CMD --ignore-preflight-errors=all"
+SCRIPT
+
+def provision_vm(config, vm_name, i)
+    config.vm.hostname = vm_name
+    config.vm.synced_folder ".", "/vagrant", disabled: true
+    config.vm.box = $box
+    config.vm.box_version = $box_version
+    ip = "172.16.7.#{i+100}"
+    config.vm.network :private_network, ip: ip
+    config.vm.provision :shell, inline: "ifup eth1"
+    config.vm.provision :shell, inline: $reset_kube_config, env: {"MYIP" => ip}, privileged: true
+end
+
+Vagrant.configure("2") do |config|
+    (1..$num_clusters).each do |i|
+        if i == 1
+            config.vm.define vm_name = "central", primary: true do |config|
+                provision_vm(config, vm_name, i)
+            end
+        else
+            config.vm.define vm_name = "%s-%01d" % ["edge", i-1] do |config|
+                provision_vm(config, vm_name, i)
+            end
+        end
+    end
+end
