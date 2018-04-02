@@ -15,7 +15,7 @@ setenforce 0
 sysctl --system
 kubeadm reset
 echo "Running kubeadm init..."
-JOIN_CMD=$(kubeadm init --apiserver-advertise-address ${MYIP} --pod-network-cidr 10.1.0.0/16 | grep "kubeadm join")
+JOIN_CMD=$(kubeadm init --kubernetes-version 1.10.0 --apiserver-advertise-address ${MYIP} --pod-network-cidr 10.1.0.0/16 | grep "kubeadm join")
 echo "$JOIN_CMD"
 cp /etc/kubernetes/admin.conf /home/vagrant/.kube/config
 chown vagrant:vagrant /home/vagrant/.kube/config

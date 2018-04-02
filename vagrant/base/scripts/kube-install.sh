@@ -10,7 +10,7 @@ swapoff -a
 yum -y update
 
 # Install Docker.
-yum install -y docker
+yum install -y docker-2:1.13.1-53.git774336d.el7.centos.x86_64
 systemctl enable docker && systemctl start docker
 
 # Install kubeadm.
@@ -24,7 +24,7 @@ repo_gpgcheck=1
 gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 EOF
 setenforce 0
-yum install -y kubelet kubeadm kubectl
+yum install -y kubelet-1.10.0-0.x86_64 kubeadm-1.10.0-0.x86_64 kubectl-1.10.0-0.x86_64
 systemctl enable kubelet && systemctl start kubelet
 cat <<EOF >  /etc/sysctl.d/k8s.conf
 net.bridge.bridge-nf-call-ip6tables = 1
@@ -34,7 +34,7 @@ sysctl --system
 
 # Initialize the master node.
 echo "Running kubeadm init..."
-JOIN_CMD=$(kubeadm init | grep "kubeadm join")
+JOIN_CMD=$(kubeadm init --kubernetes-version 1.10.0 | grep "kubeadm join")
 echo "$JOIN_CMD"
 
 # Allow kubectl to work for non-root users.
