@@ -23,7 +23,7 @@ end
 
 Vagrant.configure("2") do |config|
     (1..$num_clusters).each do |i|
-        if i == $num_clusters
+        if i == 1
             config.vm.define vm_name = "central", primary: true do |config|
                 provision_vm(config, vm_name, i)
                 config.vm.provision "file", source: "scripts/pv2.yaml", destination: "/home/vagrant/pv2.yaml"
