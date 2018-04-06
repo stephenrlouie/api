@@ -2,6 +2,7 @@
 
 sudo su
 
+mkdir -p /etc/kubernetes/edge
 kubectl create -f /home/vagrant/pv2.yaml
 
 PACKAGE=client
