@@ -4,6 +4,8 @@ OPTIKON = $(GOPATH)/src/wwwin-github.cisco.com/edge/optikon
 VERSION = v0
 
 all:
+	rm -rf ../models
+	rm -rf ../server/restapi/operations
 	mkdir -p ../client;
 	docker run -v $(OPTIKON):/go/src/wwwin-github.cisco.com/edge/optikon \
 		 	-w /go/src/wwwin-github.cisco.com/edge/optikon/api/$(VERSION)/gen \

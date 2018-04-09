@@ -49,6 +49,11 @@ paths:
       - "clusters"
       summary: "Add a new cluster to optikon"
       description: ""
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: "#/definitions/io.k8s.cluster-registry.pkg.apis.clusterregistry.v1alpha1.Cluster"
       operationId: "addCluster"
       consumes:
       - "application/json"
@@ -108,6 +113,10 @@ paths:
         description: "Cluster id to update"
         required: true
         type: "string"
+      - name: body
+        in: body
+        schema:
+          $ref: "#/definitions/io.k8s.cluster-registry.pkg.apis.clusterregistry.v1alpha1.Cluster"
       responses:
         200:
           description: "OK"
@@ -177,6 +186,11 @@ paths:
       - "application/json"
       produces:
       - "application/json"
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: "#/definitions/chart.Chart"
       responses:
         201:
           $ref: "#/responses/Created"
@@ -231,6 +245,10 @@ paths:
         description: "ID of chart to return"
         required: true
         type: "string"
+      - name: body
+        in: body
+        schema:
+          $ref: "#/definitions/chart.Chart"
       responses:
         200:
           description: "OK"

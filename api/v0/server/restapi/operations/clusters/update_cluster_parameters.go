@@ -9,9 +9,12 @@ import (
 	"net/http"
 
 	"github.com/go-openapi/errors"
+	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
 
 	strfmt "github.com/go-openapi/strfmt"
+
+	"wwwin-github.cisco.com/edge/optikon/api/v0/models"
 )
 
 // NewUpdateClusterParams creates a new UpdateClusterParams object
@@ -30,6 +33,10 @@ type UpdateClusterParams struct {
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
+	/*
+	  In: body
+	*/
+	Body *models.IoK8sClusterRegistryPkgApisClusterregistryV1alpha1Cluster
 	/*Cluster id to update
 	  Required: true
 	  In: path
@@ -42,6 +49,23 @@ type UpdateClusterParams struct {
 func (o *UpdateClusterParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
 	var res []error
 	o.HTTPRequest = r
+
+	if runtime.HasBody(r) {
+		defer r.Body.Close()
+		var body models.IoK8sClusterRegistryPkgApisClusterregistryV1alpha1Cluster
+		if err := route.Consumer.Consume(r.Body, &body); err != nil {
+			res = append(res, errors.NewParseError("body", "body", "", err))
+		} else {
+			if err := body.Validate(route.Formats); err != nil {
+				res = append(res, err)
+			}
+
+			if len(res) == 0 {
+				o.Body = &body
+			}
+		}
+
+	}
 
 	rClusterID, rhkClusterID, _ := route.Params.GetOK("clusterId")
 	if err := o.bindClusterID(rClusterID, rhkClusterID, route.Formats); err != nil {

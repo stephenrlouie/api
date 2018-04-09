@@ -16,6 +16,8 @@ import (
 	cr "github.com/go-openapi/runtime/client"
 
 	strfmt "github.com/go-openapi/strfmt"
+
+	"wwwin-github.cisco.com/edge/optikon/api/v0/models"
 )
 
 // NewUpdateClusterParams creates a new UpdateClusterParams object
@@ -62,6 +64,8 @@ for the update cluster operation typically these are written to a http.Request
 */
 type UpdateClusterParams struct {
 
+	/*Body*/
+	Body *models.IoK8sClusterRegistryPkgApisClusterregistryV1alpha1Cluster
 	/*ClusterID
 	  Cluster id to update
 
@@ -106,6 +110,17 @@ func (o *UpdateClusterParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
+// WithBody adds the body to the update cluster params
+func (o *UpdateClusterParams) WithBody(body *models.IoK8sClusterRegistryPkgApisClusterregistryV1alpha1Cluster) *UpdateClusterParams {
+	o.SetBody(body)
+	return o
+}
+
+// SetBody adds the body to the update cluster params
+func (o *UpdateClusterParams) SetBody(body *models.IoK8sClusterRegistryPkgApisClusterregistryV1alpha1Cluster) {
+	o.Body = body
+}
+
 // WithClusterID adds the clusterID to the update cluster params
 func (o *UpdateClusterParams) WithClusterID(clusterID string) *UpdateClusterParams {
 	o.SetClusterID(clusterID)
@@ -124,6 +139,12 @@ func (o *UpdateClusterParams) WriteToRequest(r runtime.ClientRequest, reg strfmt
 		return err
 	}
 	var res []error
+
+	if o.Body != nil {
+		if err := r.SetBodyParam(o.Body); err != nil {
+			return err
+		}
+	}
 
 	// path param clusterId
 	if err := r.SetPathParam("clusterId", o.ClusterID); err != nil {

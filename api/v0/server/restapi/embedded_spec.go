@@ -73,6 +73,15 @@ func init() {
         ],
         "summary": "Add a new cluster to optikon",
         "operationId": "addCharts",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/chart.Chart"
+            }
+          }
+        ],
         "responses": {
           "201": {
             "$ref": "#/responses/Created"
@@ -150,6 +159,13 @@ func init() {
             "name": "chartId",
             "in": "path",
             "required": true
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/chart.Chart"
+            }
           }
         ],
         "responses": {
@@ -251,6 +267,15 @@ func init() {
         ],
         "summary": "Add a new cluster to optikon",
         "operationId": "addCluster",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/io.k8s.cluster-registry.pkg.apis.clusterregistry.v1alpha1.Cluster"
+            }
+          }
+        ],
         "responses": {
           "201": {
             "$ref": "#/responses/Created"
@@ -328,6 +353,13 @@ func init() {
             "name": "clusterId",
             "in": "path",
             "required": true
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/io.k8s.cluster-registry.pkg.apis.clusterregistry.v1alpha1.Cluster"
+            }
           }
         ],
         "responses": {

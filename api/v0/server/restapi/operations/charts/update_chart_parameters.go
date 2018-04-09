@@ -9,9 +9,12 @@ import (
 	"net/http"
 
 	"github.com/go-openapi/errors"
+	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
 
 	strfmt "github.com/go-openapi/strfmt"
+
+	"wwwin-github.cisco.com/edge/optikon/api/v0/models"
 )
 
 // NewUpdateChartParams creates a new UpdateChartParams object
@@ -30,6 +33,10 @@ type UpdateChartParams struct {
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
+	/*
+	  In: body
+	*/
+	Body *models.ChartChart
 	/*ID of chart to return
 	  Required: true
 	  In: path
@@ -42,6 +49,23 @@ type UpdateChartParams struct {
 func (o *UpdateChartParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
 	var res []error
 	o.HTTPRequest = r
+
+	if runtime.HasBody(r) {
+		defer r.Body.Close()
+		var body models.ChartChart
+		if err := route.Consumer.Consume(r.Body, &body); err != nil {
+			res = append(res, errors.NewParseError("body", "body", "", err))
+		} else {
+			if err := body.Validate(route.Formats); err != nil {
+				res = append(res, err)
+			}
+
+			if len(res) == 0 {
+				o.Body = &body
+			}
+		}
+
+	}
 
 	rChartID, rhkChartID, _ := route.Params.GetOK("chartId")
 	if err := o.bindChartID(rChartID, rhkChartID, route.Formats); err != nil {

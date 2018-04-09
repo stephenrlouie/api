@@ -16,12 +16,14 @@ import (
 	cr "github.com/go-openapi/runtime/client"
 
 	strfmt "github.com/go-openapi/strfmt"
+
+	"wwwin-github.cisco.com/edge/optikon/api/v0/models"
 )
 
 // NewAddChartsParams creates a new AddChartsParams object
 // with the default values initialized.
 func NewAddChartsParams() *AddChartsParams {
-
+	var ()
 	return &AddChartsParams{
 
 		timeout: cr.DefaultTimeout,
@@ -31,7 +33,7 @@ func NewAddChartsParams() *AddChartsParams {
 // NewAddChartsParamsWithTimeout creates a new AddChartsParams object
 // with the default values initialized, and the ability to set a timeout on a request
 func NewAddChartsParamsWithTimeout(timeout time.Duration) *AddChartsParams {
-
+	var ()
 	return &AddChartsParams{
 
 		timeout: timeout,
@@ -41,7 +43,7 @@ func NewAddChartsParamsWithTimeout(timeout time.Duration) *AddChartsParams {
 // NewAddChartsParamsWithContext creates a new AddChartsParams object
 // with the default values initialized, and the ability to set a context for a request
 func NewAddChartsParamsWithContext(ctx context.Context) *AddChartsParams {
-
+	var ()
 	return &AddChartsParams{
 
 		Context: ctx,
@@ -51,7 +53,7 @@ func NewAddChartsParamsWithContext(ctx context.Context) *AddChartsParams {
 // NewAddChartsParamsWithHTTPClient creates a new AddChartsParams object
 // with the default values initialized, and the ability to set a custom HTTPClient for a request
 func NewAddChartsParamsWithHTTPClient(client *http.Client) *AddChartsParams {
-
+	var ()
 	return &AddChartsParams{
 		HTTPClient: client,
 	}
@@ -61,6 +63,10 @@ func NewAddChartsParamsWithHTTPClient(client *http.Client) *AddChartsParams {
 for the add charts operation typically these are written to a http.Request
 */
 type AddChartsParams struct {
+
+	/*Body*/
+	Body *models.ChartChart
+
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
@@ -99,6 +105,17 @@ func (o *AddChartsParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
+// WithBody adds the body to the add charts params
+func (o *AddChartsParams) WithBody(body *models.ChartChart) *AddChartsParams {
+	o.SetBody(body)
+	return o
+}
+
+// SetBody adds the body to the add charts params
+func (o *AddChartsParams) SetBody(body *models.ChartChart) {
+	o.Body = body
+}
+
 // WriteToRequest writes these params to a swagger request
 func (o *AddChartsParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -106,6 +123,12 @@ func (o *AddChartsParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Reg
 		return err
 	}
 	var res []error
+
+	if o.Body != nil {
+		if err := r.SetBodyParam(o.Body); err != nil {
+			return err
+		}
+	}
 
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)

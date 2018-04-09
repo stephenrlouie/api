@@ -16,6 +16,8 @@ import (
 	cr "github.com/go-openapi/runtime/client"
 
 	strfmt "github.com/go-openapi/strfmt"
+
+	"wwwin-github.cisco.com/edge/optikon/api/v0/models"
 )
 
 // NewUpdateChartParams creates a new UpdateChartParams object
@@ -62,6 +64,8 @@ for the update chart operation typically these are written to a http.Request
 */
 type UpdateChartParams struct {
 
+	/*Body*/
+	Body *models.ChartChart
 	/*ChartID
 	  ID of chart to return
 
@@ -106,6 +110,17 @@ func (o *UpdateChartParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
+// WithBody adds the body to the update chart params
+func (o *UpdateChartParams) WithBody(body *models.ChartChart) *UpdateChartParams {
+	o.SetBody(body)
+	return o
+}
+
+// SetBody adds the body to the update chart params
+func (o *UpdateChartParams) SetBody(body *models.ChartChart) {
+	o.Body = body
+}
+
 // WithChartID adds the chartID to the update chart params
 func (o *UpdateChartParams) WithChartID(chartID string) *UpdateChartParams {
 	o.SetChartID(chartID)
@@ -124,6 +139,12 @@ func (o *UpdateChartParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.R
 		return err
 	}
 	var res []error
+
+	if o.Body != nil {
+		if err := r.SetBodyParam(o.Body); err != nil {
+			return err
+		}
+	}
 
 	// path param chartId
 	if err := r.SetPathParam("chartId", o.ChartID); err != nil {

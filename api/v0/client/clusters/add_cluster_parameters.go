@@ -16,12 +16,14 @@ import (
 	cr "github.com/go-openapi/runtime/client"
 
 	strfmt "github.com/go-openapi/strfmt"
+
+	"wwwin-github.cisco.com/edge/optikon/api/v0/models"
 )
 
 // NewAddClusterParams creates a new AddClusterParams object
 // with the default values initialized.
 func NewAddClusterParams() *AddClusterParams {
-
+	var ()
 	return &AddClusterParams{
 
 		timeout: cr.DefaultTimeout,
@@ -31,7 +33,7 @@ func NewAddClusterParams() *AddClusterParams {
 // NewAddClusterParamsWithTimeout creates a new AddClusterParams object
 // with the default values initialized, and the ability to set a timeout on a request
 func NewAddClusterParamsWithTimeout(timeout time.Duration) *AddClusterParams {
-
+	var ()
 	return &AddClusterParams{
 
 		timeout: timeout,
@@ -41,7 +43,7 @@ func NewAddClusterParamsWithTimeout(timeout time.Duration) *AddClusterParams {
 // NewAddClusterParamsWithContext creates a new AddClusterParams object
 // with the default values initialized, and the ability to set a context for a request
 func NewAddClusterParamsWithContext(ctx context.Context) *AddClusterParams {
-
+	var ()
 	return &AddClusterParams{
 
 		Context: ctx,
@@ -51,7 +53,7 @@ func NewAddClusterParamsWithContext(ctx context.Context) *AddClusterParams {
 // NewAddClusterParamsWithHTTPClient creates a new AddClusterParams object
 // with the default values initialized, and the ability to set a custom HTTPClient for a request
 func NewAddClusterParamsWithHTTPClient(client *http.Client) *AddClusterParams {
-
+	var ()
 	return &AddClusterParams{
 		HTTPClient: client,
 	}
@@ -61,6 +63,10 @@ func NewAddClusterParamsWithHTTPClient(client *http.Client) *AddClusterParams {
 for the add cluster operation typically these are written to a http.Request
 */
 type AddClusterParams struct {
+
+	/*Body*/
+	Body *models.IoK8sClusterRegistryPkgApisClusterregistryV1alpha1Cluster
+
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
@@ -99,6 +105,17 @@ func (o *AddClusterParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
+// WithBody adds the body to the add cluster params
+func (o *AddClusterParams) WithBody(body *models.IoK8sClusterRegistryPkgApisClusterregistryV1alpha1Cluster) *AddClusterParams {
+	o.SetBody(body)
+	return o
+}
+
+// SetBody adds the body to the add cluster params
+func (o *AddClusterParams) SetBody(body *models.IoK8sClusterRegistryPkgApisClusterregistryV1alpha1Cluster) {
+	o.Body = body
+}
+
 // WriteToRequest writes these params to a swagger request
 func (o *AddClusterParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -106,6 +123,12 @@ func (o *AddClusterParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Re
 		return err
 	}
 	var res []error
+
+	if o.Body != nil {
+		if err := r.SetBodyParam(o.Body); err != nil {
+			return err
+		}
+	}
 
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
