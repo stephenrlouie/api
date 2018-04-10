@@ -8,8 +8,8 @@ TAG = 0.1
 all: build
 
 build:
-	CGO_ENABLED=0 go build --ldflags '${EXTLDFLAGS}' -o ${IMAGE} wwwin-github.cisco.com/edge/optikon-api/api/v0/cmd
+	CGO_ENABLED=0 go build --ldflags '${EXTLDFLAGS}' -o ${IMAGE} wwwin-github.cisco.com/edge/optikon-api
 
 container:
-	docker run -t -w /go/src/wwwin-github.cisco.com/edge/optikon -v `pwd`:/go/src/wwwin-github.cisco.com/edge/optikon golang:1.10.1 make
+	docker run -t -w /go/src/wwwin-github.cisco.com/edge/optikon-api -v `pwd`:/go/src/wwwin-github.cisco.com/edge/optikon-api golang:1.10.1 make
 	docker build -t $(REPO):$(TAG) .
