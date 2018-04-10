@@ -5,9 +5,9 @@ import (
 	"path"
 
 	"github.com/go-openapi/runtime/middleware"
-	"wwwin-github.cisco.com/edge/optikon/api/v0/mock"
-	"wwwin-github.cisco.com/edge/optikon/api/v0/server/restapi"
-	"wwwin-github.cisco.com/edge/optikon/api/v0/server/restapi/operations/releases"
+	"wwwin-github.cisco.com/edge/optikon-api/api/v0/mock"
+	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/restapi"
+	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/restapi/operations/releases"
 )
 
 func NewDeleteRelease() *deleteRelease {

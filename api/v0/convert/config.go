@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"k8s.io/helm/pkg/proto/hapi/chart"
-	"wwwin-github.cisco.com/edge/optikon/api/v0/models"
+	"wwwin-github.cisco.com/edge/optikon-api/api/v0/models"
 )
 
 func ConfigToJSON(cfg *chart.Config) *models.ReleaseConfig {

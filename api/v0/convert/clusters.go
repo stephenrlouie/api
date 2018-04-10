@@ -3,7 +3,7 @@ package convert
 // NESTED CONVERT FUNCTIONS -- cluster-reg ---> optikon
 import (
 	"k8s.io/cluster-registry/pkg/apis/clusterregistry/v1alpha1"
-	"wwwin-github.cisco.com/edge/optikon/api/v0/models"
+	"wwwin-github.cisco.com/edge/optikon-api/api/v0/models"
 )
 
 func RegToOptikonClusters(input *v1alpha1.ClusterList) []*models.IoK8sClusterRegistryPkgApisClusterregistryV1alpha1Cluster {

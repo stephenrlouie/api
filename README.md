@@ -25,7 +25,7 @@ an edge app manager prototype
 
 ### optikon architecture
 
-![archdiagram](https://wwwin-github.cisco.com/edge/optikon/blob/master/docs/arch.png)
+![archdiagram](https://wwwin-github.cisco.com/edge/optikon-api/blob/master/docs/arch.png)
 
 
 #### arch explanation
@@ -37,14 +37,14 @@ an edge app manager prototype
 - The `/cluster` endpoint passes through to the Kubernetes Cluster-Registry API server. cluster-registry [is an existing thing](https://github.com/kubernetes/cluster-registry).
 - The `/app` endpoint passes through to the helm forwarder.
 - The helm forwarder is a tiny API client that lets users run helm charts on mutiple k8s clusters at once, and also get the status of their helm releases. we write that takes in a helm chart / some inputs and a list of cluster names to deploy onto. It knows about all the helm receivers on every "edge" cluster, and forwards the helm app info to each of the clusters listed. (*note* - this is a "hack" in advance of Helm v3, which plans to have multicluster management)
-- Central cluster runs a CoreDNS nameserver. DNS names from the helm charts are added by the Optikon API. DNS name mapped to a list of anycast IPs for every helm app. See the [DNS doc](https://wwwin-github.cisco.com/edge/optikon/blob/master/coredns/dns.md) for details.
+- Central cluster runs a CoreDNS nameserver. DNS names from the helm charts are added by the Optikon API. DNS name mapped to a list of anycast IPs for every helm app. See the [DNS doc](https://wwwin-github.cisco.com/edge/optikon-api/blob/master/coredns/dns.md) for details.
 
 **"Edge" Clusters**
 - This arch shows just one edge cluster, but a good demo would show at least two additional clusters
 - Cluster registry manages this cluster
 - Helm receiver is a tiny api server- gets requests to deploy a helm chart onto itself. Helm receiver can talk to the helm tiller (helm server) to do a `helm install`,  `helm list`.
 - One edge app corresponds to one helm chart.
-- CoreDNS also runs on every Edge cluster. This "edge CoreDNS" can talk to the centrally-running CoreDNS. Again, see the [DNS explanation doc](https://wwwin-github.cisco.com/edge/optikon/blob/master/coredns/dns.md) for details / open questions.
+- CoreDNS also runs on every Edge cluster. This "edge CoreDNS" can talk to the centrally-running CoreDNS. Again, see the [DNS explanation doc](https://wwwin-github.cisco.com/edge/optikon-api/blob/master/coredns/dns.md) for details / open questions.
 
 
 ### repo structure

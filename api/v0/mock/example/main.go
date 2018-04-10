@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"wwwin-github.cisco.com/edge/optikon/api/v0/mock"
+	"wwwin-github.cisco.com/edge/optikon-api/api/v0/mock"
 )
 
 type test struct {

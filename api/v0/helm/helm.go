@@ -9,8 +9,8 @@ import (
 	"google.golang.org/grpc/metadata"
 	tiller "k8s.io/helm/pkg/proto/hapi/services"
 	"k8s.io/helm/pkg/version"
-	"wwwin-github.cisco.com/edge/optikon/api/v0/convert"
-	"wwwin-github.cisco.com/edge/optikon/api/v0/models"
+	"wwwin-github.cisco.com/edge/optikon-api/api/v0/convert"
+	"wwwin-github.cisco.com/edge/optikon-api/api/v0/models"
 )
 
 type TillerClient struct {

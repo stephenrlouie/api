@@ -11,8 +11,8 @@ import (
 
 	strfmt "github.com/go-openapi/strfmt"
 
-	"wwwin-github.cisco.com/edge/optikon/api/v0/client/clusters"
-	"wwwin-github.cisco.com/edge/optikon/api/v0/client/releases"
+	"wwwin-github.cisco.com/edge/optikon-api/api/v0/client/clusters"
+	"wwwin-github.cisco.com/edge/optikon-api/api/v0/client/releases"
 )
 
 // Default optikon HTTP client.

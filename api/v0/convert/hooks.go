@@ -5,7 +5,7 @@ import (
 
 	"github.com/go-openapi/strfmt"
 	"k8s.io/helm/pkg/proto/hapi/release"
-	"wwwin-github.cisco.com/edge/optikon/api/v0/models"
+	"wwwin-github.cisco.com/edge/optikon-api/api/v0/models"
 )
 
 func HooksToJSON(hks []*release.Hook) (models.ReleaseReleaseHooks, error) {

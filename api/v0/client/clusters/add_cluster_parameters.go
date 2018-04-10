@@ -17,7 +17,7 @@ import (
 
 	strfmt "github.com/go-openapi/strfmt"
 
-	"wwwin-github.cisco.com/edge/optikon/api/v0/models"
+	"wwwin-github.cisco.com/edge/optikon-api/api/v0/models"
 )
 
 // NewAddClusterParams creates a new AddClusterParams object

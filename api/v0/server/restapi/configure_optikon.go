@@ -19,9 +19,9 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/cluster-registry/pkg/client/clientset_generated/clientset"
 
-	"wwwin-github.cisco.com/edge/optikon/api/v0/server/restapi/operations"
-	"wwwin-github.cisco.com/edge/optikon/api/v0/server/restapi/operations/clusters"
-	"wwwin-github.cisco.com/edge/optikon/api/v0/server/restapi/operations/releases"
+	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/restapi/operations"
+	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/restapi/operations/clusters"
+	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/restapi/operations/releases"
 )
 
 // This file is safe to edit. Once it exists it will not be overwritten

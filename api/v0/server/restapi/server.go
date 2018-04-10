@@ -21,7 +21,7 @@ import (
 	flag "github.com/spf13/pflag"
 	graceful "github.com/tylerb/graceful"
 
-	"wwwin-github.cisco.com/edge/optikon/api/v0/server/restapi/operations"
+	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/restapi/operations"
 )
 
 const (
