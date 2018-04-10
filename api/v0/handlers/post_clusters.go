@@ -2,11 +2,14 @@ package handlers
 
 import (
 	"fmt"
+	"log"
 	"path"
 
 	"github.com/go-openapi/runtime/middleware"
+	"wwwin-github.cisco.com/edge/optikon/api/v0/convert"
 	"wwwin-github.cisco.com/edge/optikon/api/v0/mock"
 	"wwwin-github.cisco.com/edge/optikon/api/v0/server/restapi"
+
 	"wwwin-github.cisco.com/edge/optikon/api/v0/server/restapi/operations/clusters"
 )
 
@@ -17,10 +20,18 @@ func NewAddCluster() *addCluster {
 type addCluster struct{}
 
 func (d *addCluster) Handle(params clusters.AddClusterParams) middleware.Responder {
-	fmt.Printf("addClusters\n")
 	if restapi.MockBasePath != "" {
 		return d.MockHandle(params)
 	}
+
+	conv := convert.OptikonToRegCluster(*params.Body)
+
+	createdCluster, err := restapi.ClusterClient.ClusterregistryV1alpha1().Clusters().Create(conv)
+	if err != nil {
+		fmt.Println(err)
+		return clusters.NewAddClusterInternalServerError()
+	}
+	log.Printf("Created cluster: %s", createdCluster.GetName())
 	return clusters.NewAddClusterCreated()
 }
 

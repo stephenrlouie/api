@@ -5,6 +5,7 @@ import (
 	"path"
 
 	"github.com/go-openapi/runtime/middleware"
+	"k8s.io/apimachinery/pkg/apis/meta/v1"
 	"wwwin-github.cisco.com/edge/optikon/api/v0/mock"
 	"wwwin-github.cisco.com/edge/optikon/api/v0/server/restapi"
 	"wwwin-github.cisco.com/edge/optikon/api/v0/server/restapi/operations/clusters"
@@ -17,10 +18,16 @@ func NewDeleteCluster() *deleteCluster {
 type deleteCluster struct{}
 
 func (d *deleteCluster) Handle(params clusters.DeleteClusterParams) middleware.Responder {
-	fmt.Printf("deleteCluster: %s\n", params.ClusterID)
 	if restapi.MockBasePath != "" {
 		return d.MockHandle(params)
 	}
+
+	err := restapi.ClusterClient.ClusterregistryV1alpha1().Clusters().Delete(params.ClusterID, &v1.DeleteOptions{})
+	if err != nil {
+		fmt.Println(err)
+		return clusters.NewDeleteClusterInternalServerError()
+	}
+	fmt.Printf("Deleted cluster: %s\n", params.ClusterID)
 	return clusters.NewDeleteClusterOK()
 }
 

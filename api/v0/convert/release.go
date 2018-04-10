@@ -11,7 +11,6 @@ import (
 func ReleaseToJSON(rel *release.Release) (*models.ReleaseRelease, error) {
 	fmt.Printf("ReleaseToJSON\n")
 	fmt.Printf("Received: %+v\n", rel)
-
 	hks, err := HooksToJSON(rel.Hooks)
 	if err != nil {
 		return &models.ReleaseRelease{}, err

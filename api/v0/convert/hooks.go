@@ -9,6 +9,7 @@ import (
 )
 
 func HooksToJSON(hks []*release.Hook) (models.ReleaseReleaseHooks, error) {
+
 	fmt.Printf("HooksToJSON\n")
 	fmt.Printf("Received:  %+v\n", hks)
 	rets := models.ReleaseReleaseHooks{}

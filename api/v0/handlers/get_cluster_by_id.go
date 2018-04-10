@@ -5,8 +5,11 @@ import (
 	"path"
 
 	"github.com/go-openapi/runtime/middleware"
+	"k8s.io/apimachinery/pkg/apis/meta/v1"
+	"wwwin-github.cisco.com/edge/optikon/api/v0/convert"
 	"wwwin-github.cisco.com/edge/optikon/api/v0/mock"
 	"wwwin-github.cisco.com/edge/optikon/api/v0/models"
+
 	"wwwin-github.cisco.com/edge/optikon/api/v0/server/restapi"
 	"wwwin-github.cisco.com/edge/optikon/api/v0/server/restapi/operations/clusters"
 )
@@ -18,11 +21,19 @@ func NewGetClusterByID() *getClusterById {
 type getClusterById struct{}
 
 func (d *getClusterById) Handle(params clusters.GetClusterByIDParams) middleware.Responder {
-	fmt.Printf("getClusterById: %s\n", params.ClusterID)
 	if restapi.MockBasePath != "" {
 		return d.MockHandle(params)
 	}
-	return clusters.NewGetClusterByIDOK()
+
+	// Call cluster registry
+	regCluster, err := restapi.ClusterClient.ClusterregistryV1alpha1().Clusters().Get(params.ClusterID, v1.GetOptions{})
+	if err != nil {
+		fmt.Println(err)
+		return clusters.NewGetClusterByIDInternalServerError()
+	}
+
+	conv := convert.RegToOptikonCluster(*regCluster)
+	return clusters.NewGetClusterByIDOK().WithPayload(&conv)
 }
 
 func (d *getClusterById) MockHandle(params clusters.GetClusterByIDParams) middleware.Responder {

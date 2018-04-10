@@ -4,6 +4,7 @@ package restapi
 
 import (
 	"crypto/tls"
+	"log"
 	"net/http"
 
 	errors "github.com/go-openapi/errors"
@@ -12,6 +13,11 @@ import (
 	"github.com/rs/cors"
 	flag "github.com/spf13/pflag"
 	graceful "github.com/tylerb/graceful"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+
+	"k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/tools/clientcmd"
+	"k8s.io/cluster-registry/pkg/client/clientset_generated/clientset"
 
 	"wwwin-github.cisco.com/edge/optikon/api/v0/server/restapi/operations"
 	"wwwin-github.cisco.com/edge/optikon/api/v0/server/restapi/operations/clusters"
@@ -23,13 +29,18 @@ import (
 //go:generate swagger generate server --target ../../server --name  --spec ../swagger.yaml --skip-models --exclude-main
 
 var (
-	MockBasePath  string
-	TillersString string
-	TillersList   []string
+	MockBasePath      string
+	CentralKubeconfig string
+	CentralKubeAPIUrl string
+	ClusterClient     *clientset.Clientset //cluster registry API client	MockBasePath  string
+	TillersString     string
+	TillersList       []string
 )
 
 func init() {
 	flag.StringVar(&MockBasePath, "mock-base-path", "", "Path to the directory containing mock response files.")
+	flag.StringVar(&CentralKubeAPIUrl, "central-kube-api", "", "Kubernetes API server URL for the cluster running cluster-registry API")
+	flag.StringVar(&CentralKubeconfig, "central-kubeconfig", "", "Path to the kubeconfig running cluster-registry API server")
 	flag.StringVar(&TillersString, "tillers-list", "", "The group of tillers to process.")
 }
 
@@ -97,6 +108,31 @@ func configureTLS(tlsConfig *tls.Config) {
 // This function can be called multiple times, depending on the number of serving schemes.
 // scheme value will be set accordingly: "http", "https" or "unix"
 func configureServer(s *graceful.Server, scheme, addr string) {
+	if MockBasePath == "" {
+		// Read in central kubeconfig
+		cfg, err := clientcmd.BuildConfigFromFlags(CentralKubeAPIUrl, CentralKubeconfig)
+		if err != nil {
+			log.Fatalf("Error building kubeconfig: %s\n", err.Error())
+		}
+		kubeClient, err := kubernetes.NewForConfig(cfg)
+		if err != nil {
+			log.Fatalf("Error building kubernetes clientset: %s\n", err.Error())
+		}
+
+		// Verify that we can reach the central cluster
+		pods, err := kubeClient.CoreV1().Pods("").List(metav1.ListOptions{})
+		if err != nil {
+			panic(err.Error())
+		}
+		log.Printf("Connected to central cluster- There are %d total pods\n", len(pods.Items))
+
+		//  set up cluster registry client connection
+		ClusterClient, err = clientset.NewForConfig(cfg)
+		if err != nil {
+			log.Fatalf("Error reaching cluster-registry API: %s\n", err.Error())
+		}
+		log.Println("Connected to central cluster registry")
+	}
 }
 
 // The middleware configuration is for the handler executors. These do not apply to the swagger.json document.

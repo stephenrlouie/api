@@ -5,9 +5,12 @@ import (
 	"path"
 
 	"github.com/go-openapi/runtime/middleware"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"wwwin-github.cisco.com/edge/optikon/api/v0/convert"
 	"wwwin-github.cisco.com/edge/optikon/api/v0/mock"
 	"wwwin-github.cisco.com/edge/optikon/api/v0/models"
 	"wwwin-github.cisco.com/edge/optikon/api/v0/server/restapi"
+
 	"wwwin-github.cisco.com/edge/optikon/api/v0/server/restapi/operations/clusters"
 )
 
@@ -22,8 +25,17 @@ func (d *getClusters) Handle(params clusters.GetClustersParams) middleware.Respo
 	if restapi.MockBasePath != "" {
 		return d.MockHandle(params)
 	}
-	payload := models.GetClustersOKBody{}
-	return clusters.NewGetClustersOK().WithPayload(payload)
+
+	// Call cluster registry
+	allClusters, err := restapi.ClusterClient.ClusterregistryV1alpha1().Clusters().List(metav1.ListOptions{})
+	if err != nil {
+		fmt.Println(err)
+		return clusters.NewGetClustersInternalServerError()
+	}
+
+	conv := convert.RegToOptikonClusters(allClusters)
+
+	return clusters.NewGetClustersOK().WithPayload(conv)
 }
 
 func (d *getClusters) MockHandle(params clusters.GetClustersParams) middleware.Responder {
