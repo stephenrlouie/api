@@ -19,8 +19,8 @@ import (
 	strfmt "github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 
-	"wwwin-github.cisco.com/edge/optikon/api/v0/server/restapi/operations/charts"
 	"wwwin-github.cisco.com/edge/optikon/api/v0/server/restapi/operations/clusters"
+	"wwwin-github.cisco.com/edge/optikon/api/v0/server/restapi/operations/releases"
 )
 
 // NewOptikonAPI creates a new Optikon instance
@@ -38,23 +38,17 @@ func NewOptikonAPI(spec *loads.Document) *OptikonAPI {
 		BearerAuthenticator: security.BearerAuth,
 		JSONConsumer:        runtime.JSONConsumer(),
 		JSONProducer:        runtime.JSONProducer(),
-		ChartsAddChartsHandler: charts.AddChartsHandlerFunc(func(params charts.AddChartsParams) middleware.Responder {
-			return middleware.NotImplemented("operation ChartsAddCharts has not yet been implemented")
-		}),
 		ClustersAddClusterHandler: clusters.AddClusterHandlerFunc(func(params clusters.AddClusterParams) middleware.Responder {
 			return middleware.NotImplemented("operation ClustersAddCluster has not yet been implemented")
 		}),
-		ChartsDeleteChartHandler: charts.DeleteChartHandlerFunc(func(params charts.DeleteChartParams) middleware.Responder {
-			return middleware.NotImplemented("operation ChartsDeleteChart has not yet been implemented")
+		ReleasesAddReleasesHandler: releases.AddReleasesHandlerFunc(func(params releases.AddReleasesParams) middleware.Responder {
+			return middleware.NotImplemented("operation ReleasesAddReleases has not yet been implemented")
 		}),
 		ClustersDeleteClusterHandler: clusters.DeleteClusterHandlerFunc(func(params clusters.DeleteClusterParams) middleware.Responder {
 			return middleware.NotImplemented("operation ClustersDeleteCluster has not yet been implemented")
 		}),
-		ChartsGetChartByIDHandler: charts.GetChartByIDHandlerFunc(func(params charts.GetChartByIDParams) middleware.Responder {
-			return middleware.NotImplemented("operation ChartsGetChartByID has not yet been implemented")
-		}),
-		ChartsGetChartsHandler: charts.GetChartsHandlerFunc(func(params charts.GetChartsParams) middleware.Responder {
-			return middleware.NotImplemented("operation ChartsGetCharts has not yet been implemented")
+		ReleasesDeleteReleaseHandler: releases.DeleteReleaseHandlerFunc(func(params releases.DeleteReleaseParams) middleware.Responder {
+			return middleware.NotImplemented("operation ReleasesDeleteRelease has not yet been implemented")
 		}),
 		ClustersGetClusterByIDHandler: clusters.GetClusterByIDHandlerFunc(func(params clusters.GetClusterByIDParams) middleware.Responder {
 			return middleware.NotImplemented("operation ClustersGetClusterByID has not yet been implemented")
@@ -62,11 +56,17 @@ func NewOptikonAPI(spec *loads.Document) *OptikonAPI {
 		ClustersGetClustersHandler: clusters.GetClustersHandlerFunc(func(params clusters.GetClustersParams) middleware.Responder {
 			return middleware.NotImplemented("operation ClustersGetClusters has not yet been implemented")
 		}),
-		ChartsUpdateChartHandler: charts.UpdateChartHandlerFunc(func(params charts.UpdateChartParams) middleware.Responder {
-			return middleware.NotImplemented("operation ChartsUpdateChart has not yet been implemented")
+		ReleasesGetReleaseByIDHandler: releases.GetReleaseByIDHandlerFunc(func(params releases.GetReleaseByIDParams) middleware.Responder {
+			return middleware.NotImplemented("operation ReleasesGetReleaseByID has not yet been implemented")
+		}),
+		ReleasesGetReleasesHandler: releases.GetReleasesHandlerFunc(func(params releases.GetReleasesParams) middleware.Responder {
+			return middleware.NotImplemented("operation ReleasesGetReleases has not yet been implemented")
 		}),
 		ClustersUpdateClusterHandler: clusters.UpdateClusterHandlerFunc(func(params clusters.UpdateClusterParams) middleware.Responder {
 			return middleware.NotImplemented("operation ClustersUpdateCluster has not yet been implemented")
+		}),
+		ReleasesUpdateReleaseHandler: releases.UpdateReleaseHandlerFunc(func(params releases.UpdateReleaseParams) middleware.Responder {
+			return middleware.NotImplemented("operation ReleasesUpdateRelease has not yet been implemented")
 		}),
 	}
 }
@@ -97,26 +97,26 @@ type OptikonAPI struct {
 	// JSONProducer registers a producer for a "application/json" mime type
 	JSONProducer runtime.Producer
 
-	// ChartsAddChartsHandler sets the operation handler for the add charts operation
-	ChartsAddChartsHandler charts.AddChartsHandler
 	// ClustersAddClusterHandler sets the operation handler for the add cluster operation
 	ClustersAddClusterHandler clusters.AddClusterHandler
-	// ChartsDeleteChartHandler sets the operation handler for the delete chart operation
-	ChartsDeleteChartHandler charts.DeleteChartHandler
+	// ReleasesAddReleasesHandler sets the operation handler for the add releases operation
+	ReleasesAddReleasesHandler releases.AddReleasesHandler
 	// ClustersDeleteClusterHandler sets the operation handler for the delete cluster operation
 	ClustersDeleteClusterHandler clusters.DeleteClusterHandler
-	// ChartsGetChartByIDHandler sets the operation handler for the get chart by Id operation
-	ChartsGetChartByIDHandler charts.GetChartByIDHandler
-	// ChartsGetChartsHandler sets the operation handler for the get charts operation
-	ChartsGetChartsHandler charts.GetChartsHandler
+	// ReleasesDeleteReleaseHandler sets the operation handler for the delete release operation
+	ReleasesDeleteReleaseHandler releases.DeleteReleaseHandler
 	// ClustersGetClusterByIDHandler sets the operation handler for the get cluster by Id operation
 	ClustersGetClusterByIDHandler clusters.GetClusterByIDHandler
 	// ClustersGetClustersHandler sets the operation handler for the get clusters operation
 	ClustersGetClustersHandler clusters.GetClustersHandler
-	// ChartsUpdateChartHandler sets the operation handler for the update chart operation
-	ChartsUpdateChartHandler charts.UpdateChartHandler
+	// ReleasesGetReleaseByIDHandler sets the operation handler for the get release by Id operation
+	ReleasesGetReleaseByIDHandler releases.GetReleaseByIDHandler
+	// ReleasesGetReleasesHandler sets the operation handler for the get releases operation
+	ReleasesGetReleasesHandler releases.GetReleasesHandler
 	// ClustersUpdateClusterHandler sets the operation handler for the update cluster operation
 	ClustersUpdateClusterHandler clusters.UpdateClusterHandler
+	// ReleasesUpdateReleaseHandler sets the operation handler for the update release operation
+	ReleasesUpdateReleaseHandler releases.UpdateReleaseHandler
 
 	// ServeError is called when an error is received, there is a default handler
 	// but you can set your own with this
@@ -180,28 +180,20 @@ func (o *OptikonAPI) Validate() error {
 		unregistered = append(unregistered, "JSONProducer")
 	}
 
-	if o.ChartsAddChartsHandler == nil {
-		unregistered = append(unregistered, "charts.AddChartsHandler")
-	}
-
 	if o.ClustersAddClusterHandler == nil {
 		unregistered = append(unregistered, "clusters.AddClusterHandler")
 	}
 
-	if o.ChartsDeleteChartHandler == nil {
-		unregistered = append(unregistered, "charts.DeleteChartHandler")
+	if o.ReleasesAddReleasesHandler == nil {
+		unregistered = append(unregistered, "releases.AddReleasesHandler")
 	}
 
 	if o.ClustersDeleteClusterHandler == nil {
 		unregistered = append(unregistered, "clusters.DeleteClusterHandler")
 	}
 
-	if o.ChartsGetChartByIDHandler == nil {
-		unregistered = append(unregistered, "charts.GetChartByIDHandler")
-	}
-
-	if o.ChartsGetChartsHandler == nil {
-		unregistered = append(unregistered, "charts.GetChartsHandler")
+	if o.ReleasesDeleteReleaseHandler == nil {
+		unregistered = append(unregistered, "releases.DeleteReleaseHandler")
 	}
 
 	if o.ClustersGetClusterByIDHandler == nil {
@@ -212,12 +204,20 @@ func (o *OptikonAPI) Validate() error {
 		unregistered = append(unregistered, "clusters.GetClustersHandler")
 	}
 
-	if o.ChartsUpdateChartHandler == nil {
-		unregistered = append(unregistered, "charts.UpdateChartHandler")
+	if o.ReleasesGetReleaseByIDHandler == nil {
+		unregistered = append(unregistered, "releases.GetReleaseByIDHandler")
+	}
+
+	if o.ReleasesGetReleasesHandler == nil {
+		unregistered = append(unregistered, "releases.GetReleasesHandler")
 	}
 
 	if o.ClustersUpdateClusterHandler == nil {
 		unregistered = append(unregistered, "clusters.UpdateClusterHandler")
+	}
+
+	if o.ReleasesUpdateReleaseHandler == nil {
+		unregistered = append(unregistered, "releases.UpdateReleaseHandler")
 	}
 
 	if len(unregistered) > 0 {
@@ -313,32 +313,22 @@ func (o *OptikonAPI) initHandlerCache() {
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
-	o.handlers["POST"]["/charts"] = charts.NewAddCharts(o.context, o.ChartsAddChartsHandler)
+	o.handlers["POST"]["/clusters"] = clusters.NewAddCluster(o.context, o.ClustersAddClusterHandler)
 
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
-	o.handlers["POST"]["/clusters"] = clusters.NewAddCluster(o.context, o.ClustersAddClusterHandler)
-
-	if o.handlers["DELETE"] == nil {
-		o.handlers["DELETE"] = make(map[string]http.Handler)
-	}
-	o.handlers["DELETE"]["/charts/{chartId}"] = charts.NewDeleteChart(o.context, o.ChartsDeleteChartHandler)
+	o.handlers["POST"]["/releases"] = releases.NewAddReleases(o.context, o.ReleasesAddReleasesHandler)
 
 	if o.handlers["DELETE"] == nil {
 		o.handlers["DELETE"] = make(map[string]http.Handler)
 	}
 	o.handlers["DELETE"]["/clusters/{clusterId}"] = clusters.NewDeleteCluster(o.context, o.ClustersDeleteClusterHandler)
 
-	if o.handlers["GET"] == nil {
-		o.handlers["GET"] = make(map[string]http.Handler)
+	if o.handlers["DELETE"] == nil {
+		o.handlers["DELETE"] = make(map[string]http.Handler)
 	}
-	o.handlers["GET"]["/charts/{chartId}"] = charts.NewGetChartByID(o.context, o.ChartsGetChartByIDHandler)
-
-	if o.handlers["GET"] == nil {
-		o.handlers["GET"] = make(map[string]http.Handler)
-	}
-	o.handlers["GET"]["/charts"] = charts.NewGetCharts(o.context, o.ChartsGetChartsHandler)
+	o.handlers["DELETE"]["/releases/{releaseId}"] = releases.NewDeleteRelease(o.context, o.ReleasesDeleteReleaseHandler)
 
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
@@ -350,15 +340,25 @@ func (o *OptikonAPI) initHandlerCache() {
 	}
 	o.handlers["GET"]["/clusters"] = clusters.NewGetClusters(o.context, o.ClustersGetClustersHandler)
 
-	if o.handlers["PUT"] == nil {
-		o.handlers["PUT"] = make(map[string]http.Handler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
 	}
-	o.handlers["PUT"]["/charts/{chartId}"] = charts.NewUpdateChart(o.context, o.ChartsUpdateChartHandler)
+	o.handlers["GET"]["/releases/{releaseId}"] = releases.NewGetReleaseByID(o.context, o.ReleasesGetReleaseByIDHandler)
+
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/releases"] = releases.NewGetReleases(o.context, o.ReleasesGetReleasesHandler)
 
 	if o.handlers["PUT"] == nil {
 		o.handlers["PUT"] = make(map[string]http.Handler)
 	}
 	o.handlers["PUT"]["/clusters/{clusterId}"] = clusters.NewUpdateCluster(o.context, o.ClustersUpdateClusterHandler)
+
+	if o.handlers["PUT"] == nil {
+		o.handlers["PUT"] = make(map[string]http.Handler)
+	}
+	o.handlers["PUT"]["/releases/{releaseId}"] = releases.NewUpdateRelease(o.context, o.ReleasesUpdateReleaseHandler)
 
 }
 

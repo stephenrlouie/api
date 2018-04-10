@@ -14,8 +14,8 @@ import (
 	graceful "github.com/tylerb/graceful"
 
 	"wwwin-github.cisco.com/edge/optikon/api/v0/server/restapi/operations"
-	"wwwin-github.cisco.com/edge/optikon/api/v0/server/restapi/operations/charts"
 	"wwwin-github.cisco.com/edge/optikon/api/v0/server/restapi/operations/clusters"
+	"wwwin-github.cisco.com/edge/optikon/api/v0/server/restapi/operations/releases"
 )
 
 // This file is safe to edit. Once it exists it will not be overwritten
@@ -23,11 +23,14 @@ import (
 //go:generate swagger generate server --target ../../server --name  --spec ../swagger.yaml --skip-models --exclude-main
 
 var (
-	MockBasePath string
+	MockBasePath  string
+	TillersString string
+	TillersList   []string
 )
 
 func init() {
 	flag.StringVar(&MockBasePath, "mock-base-path", "", "Path to the directory containing mock response files.")
+	flag.StringVar(&TillersString, "tillers-list", "", "The group of tillers to process.")
 }
 
 func configureFlags(api *operations.OptikonAPI) {
@@ -48,23 +51,23 @@ func configureAPI(api *operations.OptikonAPI) http.Handler {
 
 	api.JSONProducer = runtime.JSONProducer()
 
-	api.ChartsAddChartsHandler = charts.AddChartsHandlerFunc(func(params charts.AddChartsParams) middleware.Responder {
-		return middleware.NotImplemented("operation charts.AddCharts has not yet been implemented")
+	api.ReleasesAddReleasesHandler = releases.AddReleasesHandlerFunc(func(params releases.AddReleasesParams) middleware.Responder {
+		return middleware.NotImplemented("operation releases.AddReleases has not yet been implemented")
 	})
 	api.ClustersAddClusterHandler = clusters.AddClusterHandlerFunc(func(params clusters.AddClusterParams) middleware.Responder {
 		return middleware.NotImplemented("operation clusters.AddCluster has not yet been implemented")
 	})
-	api.ChartsDeleteChartHandler = charts.DeleteChartHandlerFunc(func(params charts.DeleteChartParams) middleware.Responder {
-		return middleware.NotImplemented("operation charts.DeleteChart has not yet been implemented")
+	api.ReleasesDeleteReleaseHandler = releases.DeleteReleaseHandlerFunc(func(params releases.DeleteReleaseParams) middleware.Responder {
+		return middleware.NotImplemented("operation releases.DeleteRelease has not yet been implemented")
 	})
 	api.ClustersDeleteClusterHandler = clusters.DeleteClusterHandlerFunc(func(params clusters.DeleteClusterParams) middleware.Responder {
 		return middleware.NotImplemented("operation clusters.DeleteCluster has not yet been implemented")
 	})
-	api.ChartsGetChartByIDHandler = charts.GetChartByIDHandlerFunc(func(params charts.GetChartByIDParams) middleware.Responder {
-		return middleware.NotImplemented("operation charts.GetChartByID has not yet been implemented")
+	api.ReleasesGetReleaseByIDHandler = releases.GetReleaseByIDHandlerFunc(func(params releases.GetReleaseByIDParams) middleware.Responder {
+		return middleware.NotImplemented("operation releases.GetReleaseByID has not yet been implemented")
 	})
-	api.ChartsGetChartsHandler = charts.GetChartsHandlerFunc(func(params charts.GetChartsParams) middleware.Responder {
-		return middleware.NotImplemented("operation charts.GetCharts has not yet been implemented")
+	api.ReleasesGetReleasesHandler = releases.GetReleasesHandlerFunc(func(params releases.GetReleasesParams) middleware.Responder {
+		return middleware.NotImplemented("operation releases.GetReleases has not yet been implemented")
 	})
 	api.ClustersGetClusterByIDHandler = clusters.GetClusterByIDHandlerFunc(func(params clusters.GetClusterByIDParams) middleware.Responder {
 		return middleware.NotImplemented("operation clusters.GetClusterByID has not yet been implemented")
@@ -72,8 +75,8 @@ func configureAPI(api *operations.OptikonAPI) http.Handler {
 	api.ClustersGetClustersHandler = clusters.GetClustersHandlerFunc(func(params clusters.GetClustersParams) middleware.Responder {
 		return middleware.NotImplemented("operation clusters.GetClusters has not yet been implemented")
 	})
-	api.ChartsUpdateChartHandler = charts.UpdateChartHandlerFunc(func(params charts.UpdateChartParams) middleware.Responder {
-		return middleware.NotImplemented("operation charts.UpdateChart has not yet been implemented")
+	api.ReleasesUpdateReleaseHandler = releases.UpdateReleaseHandlerFunc(func(params releases.UpdateReleaseParams) middleware.Responder {
+		return middleware.NotImplemented("operation releases.UpdateRelease has not yet been implemented")
 	})
 	api.ClustersUpdateClusterHandler = clusters.UpdateClusterHandlerFunc(func(params clusters.UpdateClusterParams) middleware.Responder {
 		return middleware.NotImplemented("operation clusters.UpdateCluster has not yet been implemented")

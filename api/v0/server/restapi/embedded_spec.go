@@ -29,200 +29,6 @@ func init() {
   },
   "basePath": "/v0",
   "paths": {
-    "/charts": {
-      "get": {
-        "description": "Returns a list of charts",
-        "produces": [
-          "application/json"
-        ],
-        "tags": [
-          "charts"
-        ],
-        "summary": "Returns all charts",
-        "operationId": "getCharts",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/chart.Chart"
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/responses/BadRequest"
-          },
-          "401": {
-            "$ref": "#/responses/Unauthorized"
-          },
-          "500": {
-            "$ref": "#/responses/InternalServerError"
-          }
-        }
-      },
-      "post": {
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "tags": [
-          "charts"
-        ],
-        "summary": "Add a new cluster to optikon",
-        "operationId": "addCharts",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "$ref": "#/definitions/chart.Chart"
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "$ref": "#/responses/Created"
-          },
-          "400": {
-            "$ref": "#/responses/BadRequest"
-          },
-          "401": {
-            "$ref": "#/responses/Unauthorized"
-          },
-          "500": {
-            "$ref": "#/responses/InternalServerError"
-          }
-        }
-      }
-    },
-    "/charts/{chartId}": {
-      "get": {
-        "description": "Returns a single chart",
-        "produces": [
-          "application/json"
-        ],
-        "tags": [
-          "charts"
-        ],
-        "summary": "Find chart by ID",
-        "operationId": "getChartById",
-        "parameters": [
-          {
-            "type": "string",
-            "description": "ID of chart to return",
-            "name": "chartId",
-            "in": "path",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "object",
-              "$ref": "#/definitions/chart.Chart"
-            }
-          },
-          "400": {
-            "$ref": "#/responses/BadRequest"
-          },
-          "401": {
-            "$ref": "#/responses/Unauthorized"
-          },
-          "404": {
-            "$ref": "#/responses/NotFound"
-          },
-          "500": {
-            "$ref": "#/responses/InternalServerError"
-          }
-        }
-      },
-      "put": {
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "tags": [
-          "charts"
-        ],
-        "summary": "Update an existing chart",
-        "operationId": "updateChart",
-        "parameters": [
-          {
-            "type": "string",
-            "description": "ID of chart to return",
-            "name": "chartId",
-            "in": "path",
-            "required": true
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "$ref": "#/definitions/chart.Chart"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "$ref": "#/responses/BadRequest"
-          },
-          "401": {
-            "$ref": "#/responses/Unauthorized"
-          },
-          "404": {
-            "$ref": "#/responses/NotFound"
-          },
-          "500": {
-            "$ref": "#/responses/InternalServerError"
-          }
-        }
-      },
-      "delete": {
-        "produces": [
-          "application/json"
-        ],
-        "tags": [
-          "charts"
-        ],
-        "summary": "Delete chart by ID",
-        "operationId": "deleteChart",
-        "parameters": [
-          {
-            "type": "string",
-            "description": "ID of chart to return",
-            "name": "chartId",
-            "in": "path",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "$ref": "#/responses/BadRequest"
-          },
-          "401": {
-            "$ref": "#/responses/Unauthorized"
-          },
-          "404": {
-            "$ref": "#/responses/NotFound"
-          },
-          "500": {
-            "$ref": "#/responses/InternalServerError"
-          }
-        }
-      }
-    },
     "/clusters": {
       "get": {
         "description": "Returns a list of clusters",
@@ -416,6 +222,200 @@ func init() {
           }
         }
       }
+    },
+    "/releases": {
+      "get": {
+        "description": "Returns a list of releases",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "releases"
+        ],
+        "summary": "Returns all releases",
+        "operationId": "getReleases",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/release.Release"
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "#/responses/InternalServerError"
+          }
+        }
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "releases"
+        ],
+        "summary": "Add a new release to the clusters",
+        "operationId": "addReleases",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/release.Release"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "$ref": "#/responses/Created"
+          },
+          "400": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "#/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/releases/{releaseId}": {
+      "get": {
+        "description": "Returns a single release",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "releases"
+        ],
+        "summary": "Find release by ID",
+        "operationId": "getReleaseById",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "ID of release to return",
+            "name": "releaseId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/release.Release"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/responses/InternalServerError"
+          }
+        }
+      },
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "releases"
+        ],
+        "summary": "Update an existing release",
+        "operationId": "updateRelease",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "ID of release to return",
+            "name": "releaseId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/release.Release"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/responses/InternalServerError"
+          }
+        }
+      },
+      "delete": {
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "releases"
+        ],
+        "summary": "Delete release by ID",
+        "operationId": "deleteRelease",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "ID of release to return",
+            "name": "releaseId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/responses/InternalServerError"
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -430,173 +430,6 @@ func init() {
           "type": "string"
         },
         "message": {
-          "type": "string"
-        }
-      }
-    },
-    "chart.Chart": {
-      "type": "object",
-      "properties": {
-        "Config": {
-          "$ref": "#/definitions/chart.Config"
-        },
-        "Dependencies": {
-          "$ref": "#/definitions/chart.Dependencies"
-        },
-        "Files": {
-          "$ref": "#/definitions/chart.Files"
-        },
-        "Metadata": {
-          "$ref": "#/definitions/chart.Metadata"
-        },
-        "Name": {
-          "type": "string"
-        },
-        "Template": {
-          "$ref": "#/definitions/chart.Template"
-        }
-      }
-    },
-    "chart.Config": {
-      "type": "object",
-      "properties": {
-        "Raw": {
-          "type": "string"
-        },
-        "Values": {
-          "type": "object",
-          "properties": {
-            "Key": {
-              "type": "string"
-            },
-            "Value": {
-              "type": "string"
-            }
-          }
-        }
-      }
-    },
-    "chart.Dependencies": {
-      "type": "object",
-      "properties": {
-        "Alias": {
-          "type": "string"
-        },
-        "Condition": {
-          "type": "string"
-        },
-        "Name": {
-          "type": "string"
-        },
-        "Repository": {
-          "type": "string"
-        },
-        "Tags": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "Version": {
-          "type": "string"
-        }
-      }
-    },
-    "chart.Files": {
-      "type": "object",
-      "properties": {
-        "Key": {
-          "type": "string"
-        },
-        "Value": {
-          "type": "string",
-          "format": "byte"
-        }
-      }
-    },
-    "chart.Maintainer": {
-      "type": "object",
-      "properties": {
-        "Email": {
-          "type": "string"
-        },
-        "Name": {
-          "type": "string"
-        },
-        "Url": {
-          "type": "string"
-        }
-      }
-    },
-    "chart.Metadata": {
-      "type": "object",
-      "properties": {
-        "Annotations": {
-          "type": "object",
-          "properties": {
-            "Key": {
-              "type": "string"
-            },
-            "Value": {
-              "type": "string"
-            }
-          }
-        },
-        "ApiVersion": {
-          "type": "string"
-        },
-        "AppVersion": {
-          "type": "string"
-        },
-        "Deprecated": {
-          "type": "boolean"
-        },
-        "Description": {
-          "type": "string"
-        },
-        "Engine": {
-          "type": "string"
-        },
-        "Home": {
-          "type": "string"
-        },
-        "Icon": {
-          "type": "string"
-        },
-        "Keywords": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "KubeVersion": {
-          "type": "string"
-        },
-        "Maintainer": {
-          "$ref": "#/definitions/chart.Maintainer"
-        },
-        "Name": {
-          "type": "string"
-        },
-        "Sources": {
-          "type": "string"
-        },
-        "Tags": {
-          "type": "string"
-        },
-        "TillerVersion": {
-          "type": "string"
-        }
-      }
-    },
-    "chart.Template": {
-      "type": "object",
-      "properties": {
-        "Data": {
-          "type": "string",
-          "format": "byte"
-        },
-        "Name": {
           "type": "string"
         }
       }
@@ -989,6 +822,333 @@ func init() {
           "type": "string"
         }
       }
+    },
+    "release.Config": {
+      "type": "object",
+      "properties": {
+        "Raw": {
+          "type": "string"
+        },
+        "Values": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/release.ConfigValue"
+          }
+        }
+      }
+    },
+    "release.ConfigValue": {
+      "type": "object",
+      "properties": {
+        "Key": {
+          "type": "string"
+        },
+        "Value": {
+          "type": "string"
+        }
+      }
+    },
+    "release.Dependencies": {
+      "type": "object",
+      "properties": {
+        "Alias": {
+          "type": "string"
+        },
+        "Condition": {
+          "type": "string"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "Repository": {
+          "type": "string"
+        },
+        "Tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "Version": {
+          "type": "string"
+        }
+      }
+    },
+    "release.Files": {
+      "type": "object",
+      "properties": {
+        "Key": {
+          "type": "string"
+        },
+        "Value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "release.Hook": {
+      "type": "object",
+      "properties": {
+        "DeletePolicies": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "SUCCEEDED",
+              "FAILED",
+              "BEFORE_HOOK_CREATION"
+            ]
+          }
+        },
+        "Events": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "UNKNOWN",
+              "PRE_INSTALL",
+              "POST_INSTALL",
+              "PRE_DELETE",
+              "POST_DELETE",
+              "PRE_UPGRADE",
+              "POST_UPGRADE",
+              "PRE_ROLLBACK",
+              "POST_ROLLBACK",
+              "RELEASE_TEST_SUCCESS",
+              "RELEASE_TEST_FAILURE"
+            ]
+          }
+        },
+        "Kind": {
+          "type": "string"
+        },
+        "LastRun": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "Manifest": {
+          "type": "string"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "Path": {
+          "type": "string"
+        },
+        "Weight": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "release.Info": {
+      "type": "object",
+      "properties": {
+        "Deleted": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "Description": {
+          "type": "string"
+        },
+        "FirstDeployed": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "LastDeployed": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "Status": {
+          "$ref": "#/definitions/release.Status"
+        }
+      }
+    },
+    "release.Maintainer": {
+      "type": "object",
+      "properties": {
+        "Email": {
+          "type": "string"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "Url": {
+          "type": "string"
+        }
+      }
+    },
+    "release.Metadata": {
+      "type": "object",
+      "properties": {
+        "Annotations": {
+          "type": "object",
+          "properties": {
+            "Key": {
+              "type": "string"
+            },
+            "Value": {
+              "type": "string"
+            }
+          }
+        },
+        "ApiVersion": {
+          "type": "string"
+        },
+        "AppVersion": {
+          "type": "string"
+        },
+        "Deprecated": {
+          "type": "boolean"
+        },
+        "Description": {
+          "type": "string"
+        },
+        "Engine": {
+          "type": "string"
+        },
+        "Home": {
+          "type": "string"
+        },
+        "Icon": {
+          "type": "string"
+        },
+        "Keywords": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "KubeVersion": {
+          "type": "string"
+        },
+        "Maintainer": {
+          "$ref": "#/definitions/release.Maintainer"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "Sources": {
+          "type": "string"
+        },
+        "Tags": {
+          "type": "string"
+        },
+        "TillerVersion": {
+          "type": "string"
+        }
+      }
+    },
+    "release.Release": {
+      "type": "object",
+      "properties": {
+        "Config": {
+          "$ref": "#/definitions/release.Config"
+        },
+        "Hooks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/release.Hook"
+          }
+        },
+        "Info": {
+          "$ref": "#/definitions/release.Info"
+        },
+        "Manifest": {
+          "type": "string"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "Namespace": {
+          "type": "string"
+        },
+        "Version": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "release.Status": {
+      "type": "object",
+      "properties": {
+        "Code": {
+          "type": "string",
+          "enum": [
+            "UNKNOWN",
+            "DEPLOYED",
+            "DELETED",
+            "SUSPENDED",
+            "FAILED",
+            "DELETING",
+            "PENDING_INSTALL",
+            "PENDING_UPGRADE",
+            "PENDING_ROLLBACK"
+          ]
+        },
+        "LastTestSuiteRun": {
+          "$ref": "#/definitions/release.TestSuite"
+        },
+        "Notes": {
+          "type": "string"
+        },
+        "Resources": {
+          "type": "string"
+        }
+      }
+    },
+    "release.Template": {
+      "type": "object",
+      "properties": {
+        "Data": {
+          "type": "string",
+          "format": "byte"
+        },
+        "Name": {
+          "type": "string"
+        }
+      }
+    },
+    "release.TestRun": {
+      "type": "object",
+      "properties": {
+        "CompletedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "Info": {
+          "type": "string"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "StartedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "Status": {
+          "type": "string"
+        }
+      }
+    },
+    "release.TestSuite": {
+      "type": "object",
+      "properties": {
+        "CompletedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "Results": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/release.TestRun"
+          }
+        },
+        "StartedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
     }
   },
   "responses": {
@@ -1039,8 +1199,8 @@ func init() {
       }
     },
     {
-      "description": "Access to all helm charts",
-      "name": "charts",
+      "description": "Access to all helm releases",
+      "name": "releases",
       "externalDocs": {
         "description": "Helm v2.8.2",
         "url": "https://github.com/kubernetes/helm/tree/v2.8.2"

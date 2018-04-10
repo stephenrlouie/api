@@ -12,8 +12,8 @@ tags:
   externalDocs:
     description: "Cluster Registry v0.0.3"
     url: "https://github.com/kubernetes/cluster-registry/tree/v0.0.3"
-- name: "charts"
-  description: "Access to all helm charts"
+- name: "releases"
+  description: "Access to all helm releases"
   externalDocs:
     description: "Helm v2.8.2"
     url: "https://github.com/kubernetes/helm/tree/v2.8.2"
@@ -153,13 +153,13 @@ paths:
           $ref: "#/responses/NotFound"
         500:
           $ref: "#/responses/InternalServerError"
-  /charts:
+  /releases:
     get:
       tags:
-      - "charts"
-      summary: "Returns all charts"
-      description: "Returns a list of charts"
-      operationId: "getCharts"
+      - "releases"
+      summary: "Returns all releases"
+      description: "Returns a list of releases"
+      operationId: "getReleases"
       produces:
       - "application/json"
       parameters: []
@@ -169,7 +169,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/chart.Chart'
+              $ref: '#/definitions/release.Release'
         400:
           $ref: "#/responses/BadRequest"
         401:
@@ -178,10 +178,10 @@ paths:
           $ref: "#/responses/InternalServerError"
     post:
       tags:
-      - "charts"
-      summary: "Add a new cluster to optikon"
+      - "releases"
+      summary: "Add a new release to the clusters"
       description: ""
-      operationId: "addCharts"
+      operationId: "addReleases"
       consumes:
       - "application/json"
       produces:
@@ -190,7 +190,7 @@ paths:
         - name: body
           in: body
           schema:
-            $ref: "#/definitions/chart.Chart"
+            $ref: "#/definitions/release.Release"
       responses:
         201:
           $ref: "#/responses/Created"
@@ -200,19 +200,19 @@ paths:
           $ref: "#/responses/Unauthorized"
         500:
           $ref: "#/responses/InternalServerError"
-  /charts/{chartId}:
+  /releases/{releaseId}:
     get:
       tags:
-      - "charts"
-      summary: "Find chart by ID"
-      description: "Returns a single chart"
-      operationId: "getChartById"
+      - "releases"
+      summary: "Find release by ID"
+      description: "Returns a single release"
+      operationId: "getReleaseById"
       produces:
       - "application/json"
       parameters:
-      - name: "chartId"
+      - name: "releaseId"
         in: "path"
-        description: "ID of chart to return"
+        description: "ID of release to return"
         required: true
         type: "string"
       responses:
@@ -220,7 +220,7 @@ paths:
           description: "OK"
           schema:
             type: "object"
-            $ref: "#/definitions/chart.Chart"
+            $ref: "#/definitions/release.Release"
         400:
           $ref: "#/responses/BadRequest"
         401:
@@ -231,24 +231,24 @@ paths:
           $ref: "#/responses/InternalServerError"
     put:
       tags:
-      - "charts"
-      summary: "Update an existing chart"
+      - "releases"
+      summary: "Update an existing release"
       description: ""
-      operationId: "updateChart"
+      operationId: "updateRelease"
       consumes:
       - "application/json"
       produces:
       - "application/json"
       parameters:
-      - name: "chartId"
+      - name: "releaseId"
         in: "path"
-        description: "ID of chart to return"
+        description: "ID of release to return"
         required: true
         type: "string"
       - name: body
         in: body
         schema:
-          $ref: "#/definitions/chart.Chart"
+          $ref: "#/definitions/release.Release"
       responses:
         200:
           description: "OK"
@@ -262,15 +262,15 @@ paths:
           $ref: "#/responses/InternalServerError"
     delete:
       tags:
-      - "charts"
-      summary: "Delete chart by ID"
-      operationId: "deleteChart"
+      - "releases"
+      summary: "Delete release by ID"
+      operationId: "deleteRelease"
       produces:
       - "application/json"
       parameters:
-      - name: "chartId"
+      - name: "releaseId"
         in: "path"
-        description: "ID of chart to return"
+        description: "ID of release to return"
         required: true
         type: "string"
       responses:
@@ -845,27 +845,27 @@ definitions:
           described). More info:
           http://kubernetes.io/docs/user-guide/identifiers#uids
         type: string
-  chart.Chart:
+  release.Release:
     type: "object"
     properties:
       Name:
         type: "string"
       Metadata:
         $ref: >-
-          #/definitions/chart.Metadata
+          #/definitions/release.Metadata
       Template:
         $ref: >-
-          #/definitions/chart.Template
+          #/definitions/release.Template
       Dependencies:
         $ref: >-
-          #/definitions/chart.Dependencies
+          #/definitions/release.Dependencies
       Config:
         $ref: >-
-          #/definitions/chart.Config
+          #/definitions/release.Config
       Files:
         $ref: >-
-          #/definitions/chart.Files
-  chart.Metadata:
+          #/definitions/release.Files
+  release.Metadata:
     type: "object"
     properties:
       Name:
@@ -882,7 +882,7 @@ definitions:
           type: "string"
       Maintainer:
         $ref: >-
-          #/definitions/chart.Maintainer
+          #/definitions/release.Maintainer
       Engine:
         type: "string"
       Icon:
@@ -906,7 +906,7 @@ definitions:
             type: "string"
       KubeVersion:
         type: "string"
-  chart.Maintainer:
+  release.Maintainer:
     type: "object"
     properties:
       Name:
@@ -915,7 +915,7 @@ definitions:
         type: "string"
       Url:
         type: "string"
-  chart.Template:
+  release.Template:
     type: "object"
     properties:
       Name:
@@ -923,7 +923,7 @@ definitions:
       Data:
         type: "string"
         format: byte
-  chart.Dependencies:
+  release.Dependencies:
     type: "object"
     properties:
       Name:
@@ -940,19 +940,23 @@ definitions:
         type: "array"
         items:
           type: "string"
-  chart.Config:
+  release.Config:
     type: "object"
     properties:
       Raw:
         type: "string"
       Values:
-        type: "object"
-        properties:
-          Key:
-            type: "string"
-          Value:
-            type: "string"
-  chart.Files:
+        type: "array"
+        items:
+          $ref: "#/definitions/release.ConfigValue"
+  release.ConfigValue:
+    type: "object"
+    properties:
+      Key:
+        type: "string"
+      Value:
+        type: "string"
+  release.Files:
     type: "object"
     properties:
       Key:
@@ -960,6 +964,136 @@ definitions:
       Value:
         type: "string"
         format: "byte"
+  release.Release:
+    type: "object"
+    properties:
+      Name:
+        type: "string"
+      Info:
+        $ref: >-
+          #/definitions/release.Info
+      Config:
+        $ref: >-
+          #/definitions/release.Config
+      Manifest:
+        type: "string"
+      Hooks:
+        type: "array"
+        items:
+          $ref: "#/definitions/release.Hook"
+      Version:
+        type: "integer"
+        format: "int32"
+      Namespace:
+        type: "string"
+  release.Info:
+    type: "object"
+    properties:
+      Status:
+        $ref: >-
+          #/definitions/release.Status
+      FirstDeployed:
+        type: "string"
+        format: "date-time"
+      LastDeployed:
+        type: "string"
+        format: "date-time"
+      Deleted:
+        type: "string"
+        format: "date-time"
+      Description:
+        type: "string"
+  release.Status:
+    type: "object"
+    properties:
+      Code:
+        type: "string"
+        enum:
+          - "UNKNOWN"
+          - "DEPLOYED"
+          - "DELETED"
+          - "SUSPENDED"
+          - "FAILED"
+          - "DELETING"
+          - "PENDING_INSTALL"
+          - "PENDING_UPGRADE"
+          - "PENDING_ROLLBACK"
+      Resources:
+        type: "string"
+      Notes:
+        type: "string"
+      LastTestSuiteRun:
+        $ref: >-
+          #/definitions/release.TestSuite
+  release.Hook:
+    type: "object"
+    properties:
+      Name:
+        type: "string"
+      Kind:
+        type: "string"
+      Path:
+        type: "string"
+      Manifest:
+        type: "string"
+      Events:
+        type: "array"
+        items:
+          type: "string"
+          enum:
+            - "UNKNOWN"
+            - "PRE_INSTALL"
+            - "POST_INSTALL"
+            - "PRE_DELETE"
+            - "POST_DELETE"
+            - "PRE_UPGRADE"
+            - "POST_UPGRADE"
+            - "PRE_ROLLBACK"
+            - "POST_ROLLBACK"
+            - "RELEASE_TEST_SUCCESS"
+            - "RELEASE_TEST_FAILURE"
+      LastRun:
+        type: "string"
+        format: "date-time"
+      Weight:
+        type: "integer"
+        format: "int32"
+      DeletePolicies:
+        type: "array"
+        items:
+          type: "string"
+          enum:
+            - "SUCCEEDED"
+            - "FAILED"
+            - "BEFORE_HOOK_CREATION"
+  release.TestRun:
+    type: "object"
+    properties:
+      Name:
+        type: "string"
+      Status:
+        type: "string"
+      Info:
+        type: "string"
+      StartedAt:
+        type: "string"
+        format: "date-time"
+      CompletedAt:
+        type: "string"
+        format: "date-time"
+  release.TestSuite:
+    type: "object"
+    properties:
+      StartedAt:
+        type: "string"
+        format: "date-time"
+      CompletedAt:
+        type: "string"
+        format: "date-time"
+      Results:
+        type: "array"
+        items:
+          $ref: "#/definitions/release.TestRun"
   APIResponse:
     type: "object"
     properties:

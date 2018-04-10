@@ -11,8 +11,8 @@ import (
 
 	strfmt "github.com/go-openapi/strfmt"
 
-	"wwwin-github.cisco.com/edge/optikon/api/v0/client/charts"
 	"wwwin-github.cisco.com/edge/optikon/api/v0/client/clusters"
+	"wwwin-github.cisco.com/edge/optikon/api/v0/client/releases"
 )
 
 // Default optikon HTTP client.
@@ -56,9 +56,9 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *Optikon {
 	cli := new(Optikon)
 	cli.Transport = transport
 
-	cli.Charts = charts.New(transport, formats)
-
 	cli.Clusters = clusters.New(transport, formats)
+
+	cli.Releases = releases.New(transport, formats)
 
 	return cli
 }
@@ -104,9 +104,9 @@ func (cfg *TransportConfig) WithSchemes(schemes []string) *TransportConfig {
 
 // Optikon is a client for optikon
 type Optikon struct {
-	Charts *charts.Client
-
 	Clusters *clusters.Client
+
+	Releases *releases.Client
 
 	Transport runtime.ClientTransport
 }
@@ -115,8 +115,8 @@ type Optikon struct {
 func (c *Optikon) SetTransport(transport runtime.ClientTransport) {
 	c.Transport = transport
 
-	c.Charts.SetTransport(transport)
-
 	c.Clusters.SetTransport(transport)
+
+	c.Releases.SetTransport(transport)
 
 }

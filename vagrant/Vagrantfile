@@ -7,7 +7,7 @@ if ENV["NUM_CLUSTERS"] && ENV["NUM_CLUSTERS"].to_i > 0
 end
 
 $box = ENV["VM_NAME"] || "intelligent-edge-admin/centos-k8s-1.10.0"
-$box_version = ENV["VM_VERSION"] || "1.1.0"
+$box_version = ENV["VM_VERSION"] || "1.2.0"
 
 $central_cluster_coords = (ENV["CENTRAL_CLUSTER_COORDS"] || "55.692770,12.598624").split(/\s*,\s*/)
 $edge_cluster_coords = (ENV["EDGE_CLUSTER_COORDS"] || "55.680770,12.543006,55.664023,12.610126").split(/\s*,\s*/)
@@ -22,6 +22,7 @@ def provision_vm(config, vm_name, i)
     config.vm.provision :shell, inline: "ifup eth1"
     config.vm.provision "shell", path: "scripts/reset-kubeconfig.sh", env: {"MYIP" => ip}, privileged: true
     config.vm.provision "file", source: "scripts/pv1.yaml", destination: "/home/vagrant/pv1.yaml"
+    config.vm.provision "file", source: "scripts/tiller.yaml", destination: "/home/vagrant/tiller.yaml"
     config.vm.provision "shell", path: "scripts/deploy-helm.sh",  privileged: true
     config.vm.provision "file", source: "provision_files/id_rsa", destination: "/home/vagrant/id_rsa"
     if i > 1

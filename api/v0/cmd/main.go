@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	loads "github.com/go-openapi/loads"
 	flag "github.com/spf13/pflag"
@@ -24,7 +25,6 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-
 	var server *restapi.Server // make sure init is called
 
 	flag.Usage = func() {
@@ -43,6 +43,7 @@ func main() {
 	flag.Parse()
 	api := operations.NewOptikonAPI(swaggerSpec)
 	setHandlers(api)
+	processFlags()
 
 	// get server with flag values filled out
 	server = restapi.NewServer(api)
@@ -57,14 +58,19 @@ func main() {
 }
 
 func setHandlers(api *operations.OptikonAPI) {
-	api.ChartsGetChartsHandler = handlers.NewGetCharts()
-	api.ChartsAddChartsHandler = handlers.NewAddChart()
-	api.ChartsGetChartByIDHandler = handlers.NewGetChartByID()
-	api.ChartsUpdateChartHandler = handlers.NewUpdateChart()
-	api.ChartsDeleteChartHandler = handlers.NewDeleteChart()
+	api.ReleasesGetReleasesHandler = handlers.NewGetReleases()
+	api.ReleasesAddReleasesHandler = handlers.NewAddRelease()
+	api.ReleasesGetReleaseByIDHandler = handlers.NewGetReleaseByID()
+	api.ReleasesUpdateReleaseHandler = handlers.NewUpdateRelease()
+	api.ReleasesDeleteReleaseHandler = handlers.NewDeleteRelease()
+
 	api.ClustersGetClustersHandler = handlers.NewGetClusters()
 	api.ClustersAddClusterHandler = handlers.NewAddCluster()
 	api.ClustersGetClusterByIDHandler = handlers.NewGetClusterByID()
 	api.ClustersUpdateClusterHandler = handlers.NewUpdateCluster()
 	api.ClustersDeleteClusterHandler = handlers.NewDeleteCluster()
+}
+
+func processFlags() {
+	restapi.TillersList = strings.Split(restapi.TillersString, ",")
 }
