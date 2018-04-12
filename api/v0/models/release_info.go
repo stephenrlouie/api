@@ -17,16 +17,16 @@ import (
 type ReleaseInfo struct {
 
 	// deleted
-	Deleted strfmt.DateTime `json:"Deleted,omitempty"`
+	Deleted string `json:"Deleted,omitempty"`
 
 	// description
 	Description string `json:"Description,omitempty"`
 
 	// first deployed
-	FirstDeployed strfmt.DateTime `json:"FirstDeployed,omitempty"`
+	FirstDeployed string `json:"FirstDeployed,omitempty"`
 
 	// last deployed
-	LastDeployed strfmt.DateTime `json:"LastDeployed,omitempty"`
+	LastDeployed string `json:"LastDeployed,omitempty"`
 
 	// status
 	Status *ReleaseStatus `json:"Status,omitempty"`

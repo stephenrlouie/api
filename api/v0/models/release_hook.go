@@ -30,7 +30,7 @@ type ReleaseHook struct {
 	Kind string `json:"Kind,omitempty"`
 
 	// last run
-	LastRun strfmt.DateTime `json:"LastRun,omitempty"`
+	LastRun string `json:"LastRun,omitempty"`
 
 	// manifest
 	Manifest string `json:"Manifest,omitempty"`

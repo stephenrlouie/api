@@ -7,6 +7,7 @@ package releases
 
 import (
 	"net/http"
+	"os"
 	"time"
 
 	"golang.org/x/net/context"
@@ -16,8 +17,6 @@ import (
 	cr "github.com/go-openapi/runtime/client"
 
 	strfmt "github.com/go-openapi/strfmt"
-
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/models"
 )
 
 // NewUpdateReleaseParams creates a new UpdateReleaseParams object
@@ -64,10 +63,13 @@ for the update release operation typically these are written to a http.Request
 */
 type UpdateReleaseParams struct {
 
-	/*Body*/
-	Body *models.ReleaseRelease
+	/*ChartTar
+	  The file to upload
+
+	*/
+	ChartTar os.File
 	/*ReleaseID
-	  ID of release to return
+	  ID of release to update
 
 	*/
 	ReleaseID string
@@ -110,15 +112,15 @@ func (o *UpdateReleaseParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithBody adds the body to the update release params
-func (o *UpdateReleaseParams) WithBody(body *models.ReleaseRelease) *UpdateReleaseParams {
-	o.SetBody(body)
+// WithChartTar adds the chartTar to the update release params
+func (o *UpdateReleaseParams) WithChartTar(chartTar os.File) *UpdateReleaseParams {
+	o.SetChartTar(chartTar)
 	return o
 }
 
-// SetBody adds the body to the update release params
-func (o *UpdateReleaseParams) SetBody(body *models.ReleaseRelease) {
-	o.Body = body
+// SetChartTar adds the chartTar to the update release params
+func (o *UpdateReleaseParams) SetChartTar(chartTar os.File) {
+	o.ChartTar = chartTar
 }
 
 // WithReleaseID adds the releaseID to the update release params
@@ -140,10 +142,9 @@ func (o *UpdateReleaseParams) WriteToRequest(r runtime.ClientRequest, reg strfmt
 	}
 	var res []error
 
-	if o.Body != nil {
-		if err := r.SetBodyParam(o.Body); err != nil {
-			return err
-		}
+	// form file param chartTar
+	if err := r.SetFileParam("chartTar", &o.ChartTar); err != nil {
+		return err
 	}
 
 	// path param releaseId

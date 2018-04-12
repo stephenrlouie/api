@@ -2,6 +2,12 @@
 
 
 [[projects]]
+  name = "github.com/BurntSushi/toml"
+  packages = ["."]
+  revision = "b26d9c308763d68093482582cea63d69be07a0f0"
+  version = "v0.3.0"
+
+[[projects]]
   name = "github.com/Masterminds/semver"
   packages = ["."]
   revision = "8d82589cda2d7b5b9167396841975c4535c9bec6"
@@ -115,6 +121,21 @@
   name = "github.com/go-openapi/validate"
   packages = ["."]
   revision = "180bba53b98899f743a112e568bed9e2ef31aa20"
+
+[[projects]]
+  name = "github.com/gobwas/glob"
+  packages = [
+    ".",
+    "compiler",
+    "match",
+    "syntax",
+    "syntax/ast",
+    "syntax/lexer",
+    "util/runes",
+    "util/strings"
+  ]
+  revision = "5ccd90ef52e1e632236f7326478d4faa74f99438"
+  version = "v0.2.3"
 
 [[projects]]
   name = "github.com/gogo/protobuf"
@@ -479,10 +500,14 @@
 [[projects]]
   name = "k8s.io/helm"
   packages = [
+    "pkg/chartutil",
+    "pkg/ignore",
     "pkg/proto/hapi/chart",
     "pkg/proto/hapi/release",
     "pkg/proto/hapi/services",
     "pkg/proto/hapi/version",
+    "pkg/sympath",
+    "pkg/timeconv",
     "pkg/version"
   ]
   revision = "a80231648a1473929271764b920a8e346f6de844"
@@ -497,6 +522,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "3af1fd86c6cfce52929bc080a75e801c22f0a7866d750ed4059ad89424278b1e"
+  inputs-digest = "d4fc203b60162a94d44c27efc2fc7133dc114783406d24795a06d85146612d65"
   solver-name = "gps-cdcl"
   solver-version = 1

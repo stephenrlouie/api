@@ -25,15 +25,15 @@ func (d *getReleases) Handle(params releases.GetReleasesParams) middleware.Respo
 		return d.MockHandle(params)
 	}
 
+	// TODO: Async these requests to speed up.
 	var payload []*models.ReleaseRelease
-	if len(restapi.TillersList) != 0 {
-		var err error
-		tillerClient := helm.NewTillerClient(30 * time.Second)
-		payload, err = tillerClient.ListReleases(restapi.TillersList[0])
+	for _, tiller := range restapi.TillersList {
+		tillerClient := helm.NewTillerClient(5 * time.Second)
+		singleResult, err := tillerClient.ListReleases(tiller)
 		if err != nil {
 			fmt.Printf("Failed to read Releases: %v\n", err)
 		}
-		fmt.Printf("PAYLOAD: %+v\n", payload)
+		payload = append(payload, singleResult...)
 	}
 
 	return releases.NewGetReleasesOK().WithPayload(payload)

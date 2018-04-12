@@ -16,8 +16,11 @@ import (
 // swagger:model release.Release
 type ReleaseRelease struct {
 
+	// chart
+	Chart *ChartChart `json:"Chart,omitempty"`
+
 	// config
-	Config *ReleaseConfig `json:"Config,omitempty"`
+	Config *ChartConfig `json:"Config,omitempty"`
 
 	// hooks
 	Hooks ReleaseReleaseHooks `json:"Hooks"`
@@ -42,6 +45,11 @@ type ReleaseRelease struct {
 func (m *ReleaseRelease) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateChart(formats); err != nil {
+		// prop
+		res = append(res, err)
+	}
+
 	if err := m.validateConfig(formats); err != nil {
 		// prop
 		res = append(res, err)
@@ -55,6 +63,25 @@ func (m *ReleaseRelease) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *ReleaseRelease) validateChart(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Chart) { // not required
+		return nil
+	}
+
+	if m.Chart != nil {
+
+		if err := m.Chart.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("Chart")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 

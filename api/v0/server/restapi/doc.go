@@ -15,6 +15,7 @@ Optikon is an edge computing API for Kubernetes. It exposes Helm and the cluster
 
     Consumes:
     - application/json
+    - multipart/form-data
 
     Produces:
     - application/json

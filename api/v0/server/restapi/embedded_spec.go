@@ -257,7 +257,7 @@ func init() {
       },
       "post": {
         "consumes": [
-          "application/json"
+          "multipart/form-data"
         ],
         "produces": [
           "application/json"
@@ -269,11 +269,25 @@ func init() {
         "operationId": "addReleases",
         "parameters": [
           {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "$ref": "#/definitions/release.Release"
-            }
+            "type": "file",
+            "description": "The file to upload",
+            "name": "chartTar",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "The name of the helm release",
+            "name": "name",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "The kubernetes namespace to be used",
+            "name": "namespace",
+            "in": "formData",
+            "required": true
           }
         ],
         "responses": {
@@ -336,7 +350,7 @@ func init() {
       },
       "put": {
         "consumes": [
-          "application/json"
+          "multipart/form-data"
         ],
         "produces": [
           "application/json"
@@ -349,17 +363,17 @@ func init() {
         "parameters": [
           {
             "type": "string",
-            "description": "ID of release to return",
+            "description": "ID of release to update",
             "name": "releaseId",
             "in": "path",
             "required": true
           },
           {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "$ref": "#/definitions/release.Release"
-            }
+            "type": "file",
+            "description": "The file to upload",
+            "name": "chartTar",
+            "in": "formData",
+            "required": true
           }
         ],
         "responses": {
@@ -430,6 +444,158 @@ func init() {
           "type": "string"
         },
         "message": {
+          "type": "string"
+        }
+      }
+    },
+    "chart.Chart": {
+      "type": "object",
+      "properties": {
+        "Config": {
+          "$ref": "#/definitions/chart.Config"
+        },
+        "Dependencies": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/chart.Chart"
+          }
+        },
+        "Files": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobuf.Any"
+          }
+        },
+        "Metadata": {
+          "$ref": "#/definitions/chart.Metadata"
+        },
+        "Template": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/chart.Template"
+          }
+        }
+      }
+    },
+    "chart.Config": {
+      "type": "object",
+      "properties": {
+        "Raw": {
+          "type": "string"
+        },
+        "Values": {
+          "$ref": "#/definitions/chart.Map"
+        }
+      }
+    },
+    "chart.Maintainer": {
+      "type": "object",
+      "properties": {
+        "Email": {
+          "type": "string"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "Url": {
+          "type": "string"
+        }
+      }
+    },
+    "chart.Map": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/chart.Value"
+      }
+    },
+    "chart.Metadata": {
+      "type": "object",
+      "properties": {
+        "Annotations": {
+          "$ref": "#/definitions/chart.Map"
+        },
+        "ApiVersion": {
+          "type": "string"
+        },
+        "AppVersion": {
+          "type": "string"
+        },
+        "Condition": {
+          "type": "string"
+        },
+        "Deprecated": {
+          "type": "boolean"
+        },
+        "Description": {
+          "type": "string"
+        },
+        "Engine": {
+          "type": "string",
+          "enum": [
+            "UNKNOWN",
+            "GOTPL"
+          ]
+        },
+        "Home": {
+          "type": "string"
+        },
+        "Icon": {
+          "type": "string"
+        },
+        "Keywords": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "KubeVersion": {
+          "type": "string"
+        },
+        "Maintainers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/chart.Maintainer"
+          }
+        },
+        "Name": {
+          "type": "string"
+        },
+        "Sources": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "Tags": {
+          "type": "string"
+        },
+        "TillerVersion": {
+          "type": "string"
+        },
+        "Version": {
+          "type": "string"
+        }
+      }
+    },
+    "chart.Template": {
+      "type": "object",
+      "properties": {
+        "Data": {
+          "type": "string",
+          "format": "byte"
+        },
+        "Name": {
+          "type": "string"
+        }
+      }
+    },
+    "chart.Value": {
+      "type": "object",
+      "properties": {
+        "Key": {
+          "type": "string"
+        },
+        "Value": {
           "type": "string"
         }
       }
@@ -823,54 +989,15 @@ func init() {
         }
       }
     },
-    "release.Config": {
+    "protobuf.Any": {
       "type": "object",
       "properties": {
-        "Raw": {
-          "type": "string"
-        },
-        "Values": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/release.ConfigValue"
-          }
-        }
-      }
-    },
-    "release.ConfigValue": {
-      "type": "object",
-      "properties": {
-        "Key": {
+        "Type_Url": {
           "type": "string"
         },
         "Value": {
-          "type": "string"
-        }
-      }
-    },
-    "release.Dependencies": {
-      "type": "object",
-      "properties": {
-        "Alias": {
-          "type": "string"
-        },
-        "Condition": {
-          "type": "string"
-        },
-        "Name": {
-          "type": "string"
-        },
-        "Repository": {
-          "type": "string"
-        },
-        "Tags": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "Version": {
-          "type": "string"
+          "type": "string",
+          "format": "byte"
         }
       }
     },
@@ -923,8 +1050,7 @@ func init() {
           "type": "string"
         },
         "LastRun": {
-          "type": "string",
-          "format": "date-time"
+          "type": "string"
         },
         "Manifest": {
           "type": "string"
@@ -945,105 +1071,30 @@ func init() {
       "type": "object",
       "properties": {
         "Deleted": {
-          "type": "string",
-          "format": "date-time"
+          "type": "string"
         },
         "Description": {
           "type": "string"
         },
         "FirstDeployed": {
-          "type": "string",
-          "format": "date-time"
+          "type": "string"
         },
         "LastDeployed": {
-          "type": "string",
-          "format": "date-time"
+          "type": "string"
         },
         "Status": {
           "$ref": "#/definitions/release.Status"
         }
       }
     },
-    "release.Maintainer": {
-      "type": "object",
-      "properties": {
-        "Email": {
-          "type": "string"
-        },
-        "Name": {
-          "type": "string"
-        },
-        "Url": {
-          "type": "string"
-        }
-      }
-    },
-    "release.Metadata": {
-      "type": "object",
-      "properties": {
-        "Annotations": {
-          "type": "object",
-          "properties": {
-            "Key": {
-              "type": "string"
-            },
-            "Value": {
-              "type": "string"
-            }
-          }
-        },
-        "ApiVersion": {
-          "type": "string"
-        },
-        "AppVersion": {
-          "type": "string"
-        },
-        "Deprecated": {
-          "type": "boolean"
-        },
-        "Description": {
-          "type": "string"
-        },
-        "Engine": {
-          "type": "string"
-        },
-        "Home": {
-          "type": "string"
-        },
-        "Icon": {
-          "type": "string"
-        },
-        "Keywords": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "KubeVersion": {
-          "type": "string"
-        },
-        "Maintainer": {
-          "$ref": "#/definitions/release.Maintainer"
-        },
-        "Name": {
-          "type": "string"
-        },
-        "Sources": {
-          "type": "string"
-        },
-        "Tags": {
-          "type": "string"
-        },
-        "TillerVersion": {
-          "type": "string"
-        }
-      }
-    },
     "release.Release": {
       "type": "object",
       "properties": {
+        "Chart": {
+          "$ref": "#/definitions/chart.Chart"
+        },
         "Config": {
-          "$ref": "#/definitions/release.Config"
+          "$ref": "#/definitions/chart.Config"
         },
         "Hooks": {
           "type": "array",
@@ -1097,24 +1148,11 @@ func init() {
         }
       }
     },
-    "release.Template": {
-      "type": "object",
-      "properties": {
-        "Data": {
-          "type": "string",
-          "format": "byte"
-        },
-        "Name": {
-          "type": "string"
-        }
-      }
-    },
     "release.TestRun": {
       "type": "object",
       "properties": {
         "CompletedAt": {
-          "type": "string",
-          "format": "date-time"
+          "type": "string"
         },
         "Info": {
           "type": "string"
@@ -1123,8 +1161,7 @@ func init() {
           "type": "string"
         },
         "StartedAt": {
-          "type": "string",
-          "format": "date-time"
+          "type": "string"
         },
         "Status": {
           "type": "string"
@@ -1135,8 +1172,7 @@ func init() {
       "type": "object",
       "properties": {
         "CompletedAt": {
-          "type": "string",
-          "format": "date-time"
+          "type": "string"
         },
         "Results": {
           "type": "array",
@@ -1145,8 +1181,7 @@ func init() {
           }
         },
         "StartedAt": {
-          "type": "string",
-          "format": "date-time"
+          "type": "string"
         }
       }
     }

@@ -7,6 +7,7 @@ package releases
 
 import (
 	"net/http"
+	"os"
 	"time"
 
 	"golang.org/x/net/context"
@@ -16,8 +17,6 @@ import (
 	cr "github.com/go-openapi/runtime/client"
 
 	strfmt "github.com/go-openapi/strfmt"
-
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/models"
 )
 
 // NewAddReleasesParams creates a new AddReleasesParams object
@@ -64,8 +63,21 @@ for the add releases operation typically these are written to a http.Request
 */
 type AddReleasesParams struct {
 
-	/*Body*/
-	Body *models.ReleaseRelease
+	/*ChartTar
+	  The file to upload
+
+	*/
+	ChartTar os.File
+	/*Name
+	  The name of the helm release
+
+	*/
+	Name string
+	/*Namespace
+	  The kubernetes namespace to be used
+
+	*/
+	Namespace string
 
 	timeout    time.Duration
 	Context    context.Context
@@ -105,15 +117,37 @@ func (o *AddReleasesParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithBody adds the body to the add releases params
-func (o *AddReleasesParams) WithBody(body *models.ReleaseRelease) *AddReleasesParams {
-	o.SetBody(body)
+// WithChartTar adds the chartTar to the add releases params
+func (o *AddReleasesParams) WithChartTar(chartTar os.File) *AddReleasesParams {
+	o.SetChartTar(chartTar)
 	return o
 }
 
-// SetBody adds the body to the add releases params
-func (o *AddReleasesParams) SetBody(body *models.ReleaseRelease) {
-	o.Body = body
+// SetChartTar adds the chartTar to the add releases params
+func (o *AddReleasesParams) SetChartTar(chartTar os.File) {
+	o.ChartTar = chartTar
+}
+
+// WithName adds the name to the add releases params
+func (o *AddReleasesParams) WithName(name string) *AddReleasesParams {
+	o.SetName(name)
+	return o
+}
+
+// SetName adds the name to the add releases params
+func (o *AddReleasesParams) SetName(name string) {
+	o.Name = name
+}
+
+// WithNamespace adds the namespace to the add releases params
+func (o *AddReleasesParams) WithNamespace(namespace string) *AddReleasesParams {
+	o.SetNamespace(namespace)
+	return o
+}
+
+// SetNamespace adds the namespace to the add releases params
+func (o *AddReleasesParams) SetNamespace(namespace string) {
+	o.Namespace = namespace
 }
 
 // WriteToRequest writes these params to a swagger request
@@ -124,8 +158,25 @@ func (o *AddReleasesParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.R
 	}
 	var res []error
 
-	if o.Body != nil {
-		if err := r.SetBodyParam(o.Body); err != nil {
+	// form file param chartTar
+	if err := r.SetFileParam("chartTar", &o.ChartTar); err != nil {
+		return err
+	}
+
+	// form param name
+	frName := o.Name
+	fName := frName
+	if fName != "" {
+		if err := r.SetFormParam("name", fName); err != nil {
+			return err
+		}
+	}
+
+	// form param namespace
+	frNamespace := o.Namespace
+	fNamespace := frNamespace
+	if fNamespace != "" {
+		if err := r.SetFormParam("namespace", fNamespace); err != nil {
 			return err
 		}
 	}

@@ -17,13 +17,13 @@ import (
 type ReleaseTestSuite struct {
 
 	// completed at
-	CompletedAt strfmt.DateTime `json:"CompletedAt,omitempty"`
+	CompletedAt string `json:"CompletedAt,omitempty"`
 
 	// results
 	Results ReleaseTestSuiteResults `json:"Results"`
 
 	// started at
-	StartedAt strfmt.DateTime `json:"StartedAt,omitempty"`
+	StartedAt string `json:"StartedAt,omitempty"`
 }
 
 // Validate validates this release test suite

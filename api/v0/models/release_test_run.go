@@ -17,7 +17,7 @@ import (
 type ReleaseTestRun struct {
 
 	// completed at
-	CompletedAt strfmt.DateTime `json:"CompletedAt,omitempty"`
+	CompletedAt string `json:"CompletedAt,omitempty"`
 
 	// info
 	Info string `json:"Info,omitempty"`
@@ -26,7 +26,7 @@ type ReleaseTestRun struct {
 	Name string `json:"Name,omitempty"`
 
 	// started at
-	StartedAt strfmt.DateTime `json:"StartedAt,omitempty"`
+	StartedAt string `json:"StartedAt,omitempty"`
 
 	// status
 	Status string `json:"Status,omitempty"`

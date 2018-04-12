@@ -183,14 +183,25 @@ paths:
       description: ""
       operationId: "addReleases"
       consumes:
-      - "application/json"
+      - "multipart/form-data"
       produces:
       - "application/json"
       parameters:
-        - name: body
-          in: body
-          schema:
-            $ref: "#/definitions/release.Release"
+        - name: chartTar
+          in: formData
+          type: file
+          required: true
+          description: The file to upload
+        - name: name
+          in: formData
+          type: string
+          required: true
+          description: The name of the helm release
+        - name: namespace
+          in: formData
+          type: string
+          required: true
+          description: The kubernetes namespace to be used
       responses:
         201:
           $ref: "#/responses/Created"
@@ -236,19 +247,20 @@ paths:
       description: ""
       operationId: "updateRelease"
       consumes:
-      - "application/json"
+      - "multipart/form-data"
       produces:
       - "application/json"
       parameters:
       - name: "releaseId"
         in: "path"
-        description: "ID of release to return"
+        description: "ID of release to update"
         required: true
         type: "string"
-      - name: body
-        in: body
-        schema:
-          $ref: "#/definitions/release.Release"
+      - name: chartTar
+        in: formData
+        type: file
+        required: true
+        description: The file to upload
       responses:
         200:
           description: "OK"
@@ -845,117 +857,6 @@ definitions:
           described). More info:
           http://kubernetes.io/docs/user-guide/identifiers#uids
         type: string
-  release.Release:
-    type: "object"
-    properties:
-      Name:
-        type: "string"
-      Metadata:
-        $ref: >-
-          #/definitions/release.Metadata
-      Template:
-        $ref: >-
-          #/definitions/release.Template
-      Dependencies:
-        $ref: >-
-          #/definitions/release.Dependencies
-      Config:
-        $ref: >-
-          #/definitions/release.Config
-      Files:
-        $ref: >-
-          #/definitions/release.Files
-  release.Metadata:
-    type: "object"
-    properties:
-      Name:
-        type: "string"
-      Home:
-        type: "string"
-      Sources:
-        type: "string"
-      Description:
-        type: "string"
-      Keywords:
-        type: "array"
-        items:
-          type: "string"
-      Maintainer:
-        $ref: >-
-          #/definitions/release.Maintainer
-      Engine:
-        type: "string"
-      Icon:
-        type: "string"
-      ApiVersion:
-        type: "string"
-      Tags:
-        type: "string"
-      AppVersion:
-        type: "string"
-      Deprecated:
-        type: "boolean"
-      TillerVersion:
-        type: "string"
-      Annotations:
-        type: "object"
-        properties:
-          Key:
-            type: "string"
-          Value:
-            type: "string"
-      KubeVersion:
-        type: "string"
-  release.Maintainer:
-    type: "object"
-    properties:
-      Name:
-        type: "string"
-      Email:
-        type: "string"
-      Url:
-        type: "string"
-  release.Template:
-    type: "object"
-    properties:
-      Name:
-        type: "string"
-      Data:
-        type: "string"
-        format: byte
-  release.Dependencies:
-    type: "object"
-    properties:
-      Name:
-        type: "string"
-      Repository:
-        type: "string"
-      Version:
-        type: "string"
-      Alias:
-        type: "string"
-      Condition:
-        type: "string"
-      Tags:
-        type: "array"
-        items:
-          type: "string"
-  release.Config:
-    type: "object"
-    properties:
-      Raw:
-        type: "string"
-      Values:
-        type: "array"
-        items:
-          $ref: "#/definitions/release.ConfigValue"
-  release.ConfigValue:
-    type: "object"
-    properties:
-      Key:
-        type: "string"
-      Value:
-        type: "string"
   release.Files:
     type: "object"
     properties:
@@ -970,11 +871,11 @@ definitions:
       Name:
         type: "string"
       Info:
-        $ref: >-
-          #/definitions/release.Info
+        $ref: "#/definitions/release.Info"
+      Chart:
+        $ref: "#/definitions/chart.Chart"
       Config:
-        $ref: >-
-          #/definitions/release.Config
+        $ref: "#/definitions/chart.Config"
       Manifest:
         type: "string"
       Hooks:
@@ -994,13 +895,10 @@ definitions:
           #/definitions/release.Status
       FirstDeployed:
         type: "string"
-        format: "date-time"
       LastDeployed:
         type: "string"
-        format: "date-time"
       Deleted:
         type: "string"
-        format: "date-time"
       Description:
         type: "string"
   release.Status:
@@ -1023,8 +921,7 @@ definitions:
       Notes:
         type: "string"
       LastTestSuiteRun:
-        $ref: >-
-          #/definitions/release.TestSuite
+        $ref: "#/definitions/release.TestSuite"
   release.Hook:
     type: "object"
     properties:
@@ -1054,7 +951,6 @@ definitions:
             - "RELEASE_TEST_FAILURE"
       LastRun:
         type: "string"
-        format: "date-time"
       Weight:
         type: "integer"
         format: "int32"
@@ -1077,23 +973,127 @@ definitions:
         type: "string"
       StartedAt:
         type: "string"
-        format: "date-time"
       CompletedAt:
         type: "string"
-        format: "date-time"
   release.TestSuite:
     type: "object"
     properties:
       StartedAt:
         type: "string"
-        format: "date-time"
       CompletedAt:
         type: "string"
-        format: "date-time"
       Results:
         type: "array"
         items:
           $ref: "#/definitions/release.TestRun"
+  chart.Chart:
+    type: "object"
+    properties:
+      Metadata:
+        $ref: "#/definitions/chart.Metadata"
+      Template:
+        type: "array"
+        items:
+          $ref: "#/definitions/chart.Template"
+      Dependencies:
+        type: "array"
+        items:
+          $ref: "#/definitions/chart.Chart"
+      Config:
+        $ref: "#/definitions/chart.Config"
+      Files:
+        type: "array"
+        items:
+          $ref: "#/definitions/protobuf.Any"
+  chart.Metadata:
+    type: "object"
+    properties:
+      Engine:
+        type: "string"
+        enum:
+          - "UNKNOWN"
+          - "GOTPL"
+      Name:
+        type: "string"
+      Home:
+        type: "string"
+      Sources:
+        type: "array"
+        items:
+          type: "string"
+      Version:
+        type: "string"
+      Description:
+        type: "string"
+      Keywords:
+        type: "array"
+        items:
+          type: "string"
+      Maintainers:
+        type: "array"
+        items:
+          $ref: "#/definitions/chart.Maintainer"
+      Icon:
+        type: "string"
+      ApiVersion:
+        type: "string"
+      Condition:
+        type: "string"
+      Tags:
+        type: "string"
+      AppVersion:
+        type: "string"
+      Deprecated:
+        type: "boolean"
+      TillerVersion:
+        type: "string"
+      Annotations:
+        $ref: "#/definitions/chart.Map"
+      KubeVersion:
+        type: "string"
+  chart.Template:
+    type: "object"
+    properties:
+      Name:
+        type: "string"
+      Data:
+        type: "string"
+        format: "byte"
+  chart.Maintainer:
+    type: "object"
+    properties:
+      Name:
+        type: "string"
+      Email:
+        type: "string"
+      Url:
+        type: "string"
+  chart.Config:
+    type: "object"
+    properties:
+      Raw:
+        type: "string"
+      Values:
+        $ref: "#/definitions/chart.Map"
+  chart.Map:
+    type: "array"
+    items:
+      $ref: "#/definitions/chart.Value"
+  chart.Value:
+    type: "object"
+    properties:
+      Key:
+        type: "string"
+      Value:
+        type: "string"
+  protobuf.Any:
+    type: "object"
+    properties:
+      Type_Url:
+        type: "string"
+      Value:
+        type: "string"
+        format: "byte"
   APIResponse:
     type: "object"
     properties:

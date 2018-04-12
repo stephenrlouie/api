@@ -6,13 +6,15 @@ package releases
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"mime/multipart"
 	"net/http"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
+	"github.com/go-openapi/validate"
 
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/models"
+	strfmt "github.com/go-openapi/strfmt"
 )
 
 // NewAddReleasesParams creates a new AddReleasesParams object
@@ -31,10 +33,21 @@ type AddReleasesParams struct {
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
-	/*
-	  In: body
+	/*The file to upload
+	  Required: true
+	  In: formData
 	*/
-	Body *models.ReleaseRelease
+	ChartTar runtime.File
+	/*The name of the helm release
+	  Required: true
+	  In: formData
+	*/
+	Name string
+	/*The kubernetes namespace to be used
+	  Required: true
+	  In: formData
+	*/
+	Namespace string
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -43,25 +56,75 @@ func (o *AddReleasesParams) BindRequest(r *http.Request, route *middleware.Match
 	var res []error
 	o.HTTPRequest = r
 
-	if runtime.HasBody(r) {
-		defer r.Body.Close()
-		var body models.ReleaseRelease
-		if err := route.Consumer.Consume(r.Body, &body); err != nil {
-			res = append(res, errors.NewParseError("body", "body", "", err))
-		} else {
-			if err := body.Validate(route.Formats); err != nil {
-				res = append(res, err)
-			}
-
-			if len(res) == 0 {
-				o.Body = &body
-			}
+	if err := r.ParseMultipartForm(32 << 20); err != nil {
+		if err != http.ErrNotMultipart {
+			return err
+		} else if err := r.ParseForm(); err != nil {
+			return err
 		}
+	}
+	fds := runtime.Values(r.Form)
 
+	chartTar, chartTarHeader, err := r.FormFile("chartTar")
+	if err != nil {
+		res = append(res, errors.New(400, "reading file %q failed: %v", "chartTar", err))
+	} else if err := o.bindChartTar(chartTar, chartTarHeader); err != nil {
+		res = append(res, err)
+	} else {
+		o.ChartTar = runtime.File{Data: chartTar, Header: chartTarHeader}
+	}
+
+	fdName, fdhkName, _ := fds.GetOK("name")
+	if err := o.bindName(fdName, fdhkName, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	fdNamespace, fdhkNamespace, _ := fds.GetOK("namespace")
+	if err := o.bindNamespace(fdNamespace, fdhkNamespace, route.Formats); err != nil {
+		res = append(res, err)
 	}
 
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (o *AddReleasesParams) bindChartTar(file multipart.File, header *multipart.FileHeader) error {
+
+	return nil
+}
+
+func (o *AddReleasesParams) bindName(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	if !hasKey {
+		return errors.Required("name", "formData")
+	}
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+	if err := validate.RequiredString("name", "formData", raw); err != nil {
+		return err
+	}
+
+	o.Name = raw
+
+	return nil
+}
+
+func (o *AddReleasesParams) bindNamespace(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	if !hasKey {
+		return errors.Required("namespace", "formData")
+	}
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+	if err := validate.RequiredString("namespace", "formData", raw); err != nil {
+		return err
+	}
+
+	o.Namespace = raw
+
 	return nil
 }
