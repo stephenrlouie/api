@@ -21,7 +21,7 @@ import (
 // NewGetReleasesParams creates a new GetReleasesParams object
 // with the default values initialized.
 func NewGetReleasesParams() *GetReleasesParams {
-
+	var ()
 	return &GetReleasesParams{
 
 		timeout: cr.DefaultTimeout,
@@ -31,7 +31,7 @@ func NewGetReleasesParams() *GetReleasesParams {
 // NewGetReleasesParamsWithTimeout creates a new GetReleasesParams object
 // with the default values initialized, and the ability to set a timeout on a request
 func NewGetReleasesParamsWithTimeout(timeout time.Duration) *GetReleasesParams {
-
+	var ()
 	return &GetReleasesParams{
 
 		timeout: timeout,
@@ -41,7 +41,7 @@ func NewGetReleasesParamsWithTimeout(timeout time.Duration) *GetReleasesParams {
 // NewGetReleasesParamsWithContext creates a new GetReleasesParams object
 // with the default values initialized, and the ability to set a context for a request
 func NewGetReleasesParamsWithContext(ctx context.Context) *GetReleasesParams {
-
+	var ()
 	return &GetReleasesParams{
 
 		Context: ctx,
@@ -51,7 +51,7 @@ func NewGetReleasesParamsWithContext(ctx context.Context) *GetReleasesParams {
 // NewGetReleasesParamsWithHTTPClient creates a new GetReleasesParams object
 // with the default values initialized, and the ability to set a custom HTTPClient for a request
 func NewGetReleasesParamsWithHTTPClient(client *http.Client) *GetReleasesParams {
-
+	var ()
 	return &GetReleasesParams{
 		HTTPClient: client,
 	}
@@ -61,6 +61,13 @@ func NewGetReleasesParamsWithHTTPClient(client *http.Client) *GetReleasesParams 
 for the get releases operation typically these are written to a http.Request
 */
 type GetReleasesParams struct {
+
+	/*Labels
+	  The node labels to identify applicable clusters
+
+	*/
+	Labels *string
+
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
@@ -99,6 +106,17 @@ func (o *GetReleasesParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
+// WithLabels adds the labels to the get releases params
+func (o *GetReleasesParams) WithLabels(labels *string) *GetReleasesParams {
+	o.SetLabels(labels)
+	return o
+}
+
+// SetLabels adds the labels to the get releases params
+func (o *GetReleasesParams) SetLabels(labels *string) {
+	o.Labels = labels
+}
+
 // WriteToRequest writes these params to a swagger request
 func (o *GetReleasesParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -106,6 +124,22 @@ func (o *GetReleasesParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.R
 		return err
 	}
 	var res []error
+
+	if o.Labels != nil {
+
+		// query param labels
+		var qrLabels string
+		if o.Labels != nil {
+			qrLabels = *o.Labels
+		}
+		qLabels := qrLabels
+		if qLabels != "" {
+			if err := r.SetQueryParam("labels", qLabels); err != nil {
+				return err
+			}
+		}
+
+	}
 
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)

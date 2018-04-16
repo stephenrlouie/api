@@ -68,6 +68,11 @@ type AddReleasesParams struct {
 
 	*/
 	ChartTar os.File
+	/*Labels
+	  The node labels to identify applicable clusters
+
+	*/
+	Labels *string
 	/*Name
 	  The name of the helm release
 
@@ -128,6 +133,17 @@ func (o *AddReleasesParams) SetChartTar(chartTar os.File) {
 	o.ChartTar = chartTar
 }
 
+// WithLabels adds the labels to the add releases params
+func (o *AddReleasesParams) WithLabels(labels *string) *AddReleasesParams {
+	o.SetLabels(labels)
+	return o
+}
+
+// SetLabels adds the labels to the add releases params
+func (o *AddReleasesParams) SetLabels(labels *string) {
+	o.Labels = labels
+}
+
 // WithName adds the name to the add releases params
 func (o *AddReleasesParams) WithName(name string) *AddReleasesParams {
 	o.SetName(name)
@@ -161,6 +177,22 @@ func (o *AddReleasesParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.R
 	// form file param chartTar
 	if err := r.SetFileParam("chartTar", &o.ChartTar); err != nil {
 		return err
+	}
+
+	if o.Labels != nil {
+
+		// query param labels
+		var qrLabels string
+		if o.Labels != nil {
+			qrLabels = *o.Labels
+		}
+		qLabels := qrLabels
+		if qLabels != "" {
+			if err := r.SetQueryParam("labels", qLabels); err != nil {
+				return err
+			}
+		}
+
 	}
 
 	// form param name

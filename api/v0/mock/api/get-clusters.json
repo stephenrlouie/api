@@ -3,9 +3,14 @@
 	"Raw": [{
 			"Metadata": {
 				"Name": "Copenhagen1",
+				"Labels": {
+					"Region": "Europe"
+				},
 				"Annotations": {
 					"Lat": "55.6899699",
-					"Long": "12.5678864"
+					"Long": "12.5678864",
+					"NumPods": "16",
+					"Health": "Green"
 				}
 			},
 			"Template": {
@@ -15,24 +20,14 @@
 		{
 			"Metadata": {
 				"Name": "Copenhagen2",
+				"Labels": {
+					"Region": "Europe"
+				},
 				"Annotations": {
 					"Lat": "55.675938",
-					"Long": "12.587601"
-				}
-			},
-			"Template": {
-				"Name": "template name"
-			},
-			"Dependencies": {},
-			"Config": {},
-			"Files": {}
-		},
-		{
-			"Metadata": {
-				"Name": "Copenhagen3",
-				"Annotations": {
-					"Lat": "55.66938",
-					"Long": "12.567601"
+					"Long": "12.587601",
+					"NumPods": "10",
+					"Health": "Green"
 				}
 			},
 			"Template": {

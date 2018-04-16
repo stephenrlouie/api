@@ -9,6 +9,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 	"k8s.io/helm/pkg/chartutil"
+	"k8s.io/helm/pkg/proto/hapi/chart"
 	tiller "k8s.io/helm/pkg/proto/hapi/services"
 	"k8s.io/helm/pkg/version"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/convert"
@@ -72,16 +73,9 @@ func (tc *TillerClient) ListReleases(address string) (obj []*models.ReleaseRelea
 	return
 }
 
-func (tc *TillerClient) InstallRelease(address string, chartTar io.Reader, name string, namespace string) (retErr error) {
+func (tc *TillerClient) InstallRelease(address string, ch *chart.Chart, name string, namespace string) (retErr error) {
 	fmt.Printf("Install Release Request\n")
 	tc.execute(address, func(rsc tiller.ReleaseServiceClient, ctx context.Context, cancel context.CancelFunc) {
-		ch, err := chartutil.LoadArchive(chartTar)
-		if err != nil {
-			retErr = err
-			fmt.Printf("Error: Failed to read tar file %v\n", err)
-			return
-		}
-
 		req := tiller.InstallReleaseRequest{
 			Chart:     ch,
 			Values:    ch.GetValues(),
@@ -90,7 +84,7 @@ func (tc *TillerClient) InstallRelease(address string, chartTar io.Reader, name 
 		}
 		defer cancel()
 
-		_, err = rsc.InstallRelease(ctx, &req)
+		_, err := rsc.InstallRelease(ctx, &req)
 		if err != nil {
 			fmt.Printf("Error: Failed to install release: %v\n", err)
 			retErr = err

@@ -16,6 +16,8 @@ import (
 type UpdateReleaseURL struct {
 	ReleaseID string
 
+	Labels *string
+
 	_basePath string
 	// avoid unkeyed usage
 	_ struct{}
@@ -53,6 +55,18 @@ func (o *UpdateReleaseURL) Build() (*url.URL, error) {
 		_basePath = "/v0"
 	}
 	result.Path = golangswaggerpaths.Join(_basePath, _path)
+
+	qs := make(url.Values)
+
+	var labels string
+	if o.Labels != nil {
+		labels = *o.Labels
+	}
+	if labels != "" {
+		qs.Set("labels", labels)
+	}
+
+	result.RawQuery = qs.Encode()
 
 	return &result, nil
 }

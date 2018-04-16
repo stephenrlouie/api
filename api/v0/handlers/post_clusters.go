@@ -2,10 +2,13 @@ package handlers
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"path"
 
 	"github.com/go-openapi/runtime/middleware"
+	"k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/tools/clientcmd"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/convert"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/mock"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/restapi"
@@ -26,11 +29,33 @@ func (d *addCluster) Handle(params clusters.AddClusterParams) middleware.Respond
 
 	conv := convert.OptikonToRegCluster(*params.Body)
 
+	// --------------- add cluster to central cluster-registry --------------- --------------- ---------------
 	createdCluster, err := restapi.ClusterClient.ClusterregistryV1alpha1().Clusters().Create(conv)
 	if err != nil {
 		fmt.Println(err)
 		return clusters.NewAddClusterInternalServerError()
 	}
+
+	// --------------- add client info to map  --------------- --------------- ---------------
+
+	if conf, ok := createdCluster.GetAnnotations()["Conf"]; ok {
+		// TODO - clean this up - the k8s api needs a kubeconfig FILE but the kubeconfig here is posted as a string, in the JSON
+		// so write out a temporary file to use (hack for now)
+		if apiServerUrl, ok := createdCluster.GetAnnotations()["APIServer"]; ok {
+			err := ioutil.WriteFile("/tmp/curconf", []byte(conf), 0644)
+			cfg, err := clientcmd.BuildConfigFromFlags(apiServerUrl, "/tmp/curconf")
+			if err != nil {
+				log.Fatalf("Error building kubeconfig: %s\n", err.Error())
+			}
+			temp, err := kubernetes.NewForConfig(cfg)
+			if err != nil {
+				log.Fatalf("Error building kubernetes clientset: %s\n", err.Error())
+			}
+			restapi.EdgeClients[createdCluster.GetName()] = temp
+			fmt.Println("added new edge client")
+		}
+	}
+
 	log.Printf("Created cluster: %s", createdCluster.GetName())
 	return clusters.NewAddClusterCreated()
 }

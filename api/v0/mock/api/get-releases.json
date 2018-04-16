@@ -1,0 +1,35 @@
+{
+	"StatusCode": 200,
+	"Raw": [
+	{
+		"Name": "upbeat_turtle",
+		"Chart": {
+			"Metadata": {
+			"Name": "stable/prometheus"
+}
+		},
+		"Namespace": "default",
+		"Version": 1
+	},
+	{
+		"Name": "fuschia-fence",
+		"Chart": {
+			"Metadata": {
+				"Name": "video-cache:v0.2"
+			}
+		},
+		"Namespace": "default",
+		"Version": 5
+	},
+	{
+		"Name": "prom-region-europe",
+		"Chart": {
+			"Metadata": {
+				"Name": "prometheus:6.2.0"
+			}
+		},
+		"Namespace": "default",
+		"Version": 1
+	}
+]
+}

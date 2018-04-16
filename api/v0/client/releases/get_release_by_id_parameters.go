@@ -62,6 +62,11 @@ for the get release by Id operation typically these are written to a http.Reques
 */
 type GetReleaseByIDParams struct {
 
+	/*Labels
+	  The node labels to identify applicable clusters
+
+	*/
+	Labels *string
 	/*ReleaseID
 	  ID of release to return
 
@@ -106,6 +111,17 @@ func (o *GetReleaseByIDParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
+// WithLabels adds the labels to the get release by Id params
+func (o *GetReleaseByIDParams) WithLabels(labels *string) *GetReleaseByIDParams {
+	o.SetLabels(labels)
+	return o
+}
+
+// SetLabels adds the labels to the get release by Id params
+func (o *GetReleaseByIDParams) SetLabels(labels *string) {
+	o.Labels = labels
+}
+
 // WithReleaseID adds the releaseID to the get release by Id params
 func (o *GetReleaseByIDParams) WithReleaseID(releaseID string) *GetReleaseByIDParams {
 	o.SetReleaseID(releaseID)
@@ -124,6 +140,22 @@ func (o *GetReleaseByIDParams) WriteToRequest(r runtime.ClientRequest, reg strfm
 		return err
 	}
 	var res []error
+
+	if o.Labels != nil {
+
+		// query param labels
+		var qrLabels string
+		if o.Labels != nil {
+			qrLabels = *o.Labels
+		}
+		qLabels := qrLabels
+		if qLabels != "" {
+			if err := r.SetQueryParam("labels", qLabels); err != nil {
+				return err
+			}
+		}
+
+	}
 
 	// path param releaseId
 	if err := r.SetPathParam("releaseId", o.ReleaseID); err != nil {

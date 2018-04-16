@@ -234,6 +234,14 @@ func init() {
         ],
         "summary": "Returns all releases",
         "operationId": "getReleases",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "The node labels to identify applicable clusters",
+            "name": "labels",
+            "in": "query"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -288,6 +296,12 @@ func init() {
             "name": "namespace",
             "in": "formData",
             "required": true
+          },
+          {
+            "type": "string",
+            "description": "The node labels to identify applicable clusters",
+            "name": "labels",
+            "in": "query"
           }
         ],
         "responses": {
@@ -324,6 +338,12 @@ func init() {
             "name": "releaseId",
             "in": "path",
             "required": true
+          },
+          {
+            "type": "string",
+            "description": "The node labels to identify applicable clusters",
+            "name": "labels",
+            "in": "query"
           }
         ],
         "responses": {
@@ -374,6 +394,12 @@ func init() {
             "name": "chartTar",
             "in": "formData",
             "required": true
+          },
+          {
+            "type": "string",
+            "description": "The node labels to identify applicable clusters",
+            "name": "labels",
+            "in": "query"
           }
         ],
         "responses": {
@@ -410,6 +436,12 @@ func init() {
             "name": "releaseId",
             "in": "path",
             "required": true
+          },
+          {
+            "type": "string",
+            "description": "The node labels to identify applicable clusters",
+            "name": "labels",
+            "in": "query"
           }
         ],
         "responses": {
@@ -1112,6 +1144,9 @@ func init() {
           "type": "string"
         },
         "Namespace": {
+          "type": "string"
+        },
+        "OnCluster": {
           "type": "string"
         },
         "Version": {

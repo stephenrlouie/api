@@ -3,9 +3,11 @@ package handlers
 import (
 	"fmt"
 	"path"
+	"strconv"
 
 	"github.com/go-openapi/runtime/middleware"
 	"k8s.io/apimachinery/pkg/apis/meta/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/convert"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/mock"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/models"
@@ -33,6 +35,14 @@ func (d *getClusterById) Handle(params clusters.GetClusterByIDParams) middleware
 	}
 
 	conv := convert.RegToOptikonCluster(*regCluster)
+
+	// Use regular kube api client for this cluster, to get # pods
+	pods, err := restapi.EdgeClients[conv.Metadata.Name].CoreV1().Pods("").List(metav1.ListOptions{})
+	if err != nil {
+		fmt.Println(err)
+		return clusters.NewGetClusterByIDInternalServerError()
+	}
+	conv.Metadata.Annotations["NumPods"] = strconv.Itoa(len(pods.Items))
 	return clusters.NewGetClusterByIDOK().WithPayload(&conv)
 }
 

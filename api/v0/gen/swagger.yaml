@@ -162,7 +162,11 @@ paths:
       operationId: "getReleases"
       produces:
       - "application/json"
-      parameters: []
+      parameters:
+        - in: query
+          name: labels
+          type: string
+          description: The node labels to identify applicable clusters
       responses:
         200:
           description: "OK"
@@ -202,6 +206,10 @@ paths:
           type: string
           required: true
           description: The kubernetes namespace to be used
+        - in: query
+          name: labels
+          type: string
+          description: The node labels to identify applicable clusters
       responses:
         201:
           $ref: "#/responses/Created"
@@ -226,6 +234,10 @@ paths:
         description: "ID of release to return"
         required: true
         type: "string"
+      - in: query
+        name: labels
+        type: string
+        description: The node labels to identify applicable clusters
       responses:
         200:
           description: "OK"
@@ -261,6 +273,10 @@ paths:
         type: file
         required: true
         description: The file to upload
+      - in: query
+        name: labels
+        type: string
+        description: The node labels to identify applicable clusters
       responses:
         200:
           description: "OK"
@@ -285,6 +301,10 @@ paths:
         description: "ID of release to return"
         required: true
         type: "string"
+      - in: query
+        name: labels
+        type: string
+        description: The node labels to identify applicable clusters
       responses:
         200:
           description: "OK"
@@ -886,6 +906,8 @@ definitions:
         type: "integer"
         format: "int32"
       Namespace:
+        type: "string"
+      OnCluster:
         type: "string"
   release.Info:
     type: "object"

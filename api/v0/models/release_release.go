@@ -37,6 +37,9 @@ type ReleaseRelease struct {
 	// namespace
 	Namespace string `json:"Namespace,omitempty"`
 
+	// on cluster
+	OnCluster string `json:"OnCluster,omitempty"`
+
 	// version
 	Version int32 `json:"Version,omitempty"`
 }

@@ -3,7 +3,7 @@
 EXECUTABLE ?= optikon-api
 IMAGE ?= bin/$(EXECUTABLE)
 REPO = dockerhub.cisco.com/intelligent-edge-dev-docker-local/optikon-api
-TAG = 0.1
+TAG = 0.1.1
 
 all: build
 

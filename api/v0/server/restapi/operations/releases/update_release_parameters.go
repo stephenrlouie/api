@@ -37,6 +37,10 @@ type UpdateReleaseParams struct {
 	  In: formData
 	*/
 	ChartTar runtime.File
+	/*The node labels to identify applicable clusters
+	  In: query
+	*/
+	Labels *string
 	/*ID of release to update
 	  Required: true
 	  In: path
@@ -49,6 +53,8 @@ type UpdateReleaseParams struct {
 func (o *UpdateReleaseParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
 	var res []error
 	o.HTTPRequest = r
+
+	qs := runtime.Values(r.URL.Query())
 
 	if err := r.ParseMultipartForm(32 << 20); err != nil {
 		if err != http.ErrNotMultipart {
@@ -67,6 +73,11 @@ func (o *UpdateReleaseParams) BindRequest(r *http.Request, route *middleware.Mat
 		o.ChartTar = runtime.File{Data: chartTar, Header: chartTarHeader}
 	}
 
+	qLabels, qhkLabels, _ := qs.GetOK("labels")
+	if err := o.bindLabels(qLabels, qhkLabels, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
 	rReleaseID, rhkReleaseID, _ := route.Params.GetOK("releaseId")
 	if err := o.bindReleaseID(rReleaseID, rhkReleaseID, route.Formats); err != nil {
 		res = append(res, err)
@@ -79,6 +90,20 @@ func (o *UpdateReleaseParams) BindRequest(r *http.Request, route *middleware.Mat
 }
 
 func (o *UpdateReleaseParams) bindChartTar(file multipart.File, header *multipart.FileHeader) error {
+
+	return nil
+}
+
+func (o *UpdateReleaseParams) bindLabels(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	o.Labels = &raw
 
 	return nil
 }

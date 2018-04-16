@@ -40,6 +40,7 @@ type DeleteRelease struct {
 }
 
 func (o *DeleteRelease) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	route, rCtx, _ := o.Context.RouteInfo(r)
 	if rCtx != nil {
 		r = rCtx

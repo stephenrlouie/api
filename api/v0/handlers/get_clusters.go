@@ -3,6 +3,7 @@ package handlers
 import (
 	"fmt"
 	"path"
+	"strconv"
 
 	"github.com/go-openapi/runtime/middleware"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -34,6 +35,17 @@ func (d *getClusters) Handle(params clusters.GetClustersParams) middleware.Respo
 	}
 
 	conv := convert.RegToOptikonClusters(allClusters)
+
+	for _, cl := range conv {
+		// Use regular kube api client for this cluster, to get # pods
+		fmt.Printf("\n\n\n EDGE CLIENTS IS: %+v\n\n\n", restapi.EdgeClients)
+		pods, err := restapi.EdgeClients[cl.Metadata.Name].CoreV1().Pods("").List(metav1.ListOptions{})
+		if err != nil {
+			fmt.Println(err)
+			return clusters.NewGetClustersInternalServerError()
+		}
+		cl.Metadata.Annotations["NumPods"] = strconv.Itoa(len(pods.Items))
+	}
 
 	return clusters.NewGetClustersOK().WithPayload(conv)
 }

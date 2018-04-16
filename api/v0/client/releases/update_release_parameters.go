@@ -68,6 +68,11 @@ type UpdateReleaseParams struct {
 
 	*/
 	ChartTar os.File
+	/*Labels
+	  The node labels to identify applicable clusters
+
+	*/
+	Labels *string
 	/*ReleaseID
 	  ID of release to update
 
@@ -123,6 +128,17 @@ func (o *UpdateReleaseParams) SetChartTar(chartTar os.File) {
 	o.ChartTar = chartTar
 }
 
+// WithLabels adds the labels to the update release params
+func (o *UpdateReleaseParams) WithLabels(labels *string) *UpdateReleaseParams {
+	o.SetLabels(labels)
+	return o
+}
+
+// SetLabels adds the labels to the update release params
+func (o *UpdateReleaseParams) SetLabels(labels *string) {
+	o.Labels = labels
+}
+
 // WithReleaseID adds the releaseID to the update release params
 func (o *UpdateReleaseParams) WithReleaseID(releaseID string) *UpdateReleaseParams {
 	o.SetReleaseID(releaseID)
@@ -145,6 +161,22 @@ func (o *UpdateReleaseParams) WriteToRequest(r runtime.ClientRequest, reg strfmt
 	// form file param chartTar
 	if err := r.SetFileParam("chartTar", &o.ChartTar); err != nil {
 		return err
+	}
+
+	if o.Labels != nil {
+
+		// query param labels
+		var qrLabels string
+		if o.Labels != nil {
+			qrLabels = *o.Labels
+		}
+		qLabels := qrLabels
+		if qLabels != "" {
+			if err := r.SetQueryParam("labels", qLabels); err != nil {
+				return err
+			}
+		}
+
 	}
 
 	// path param releaseId

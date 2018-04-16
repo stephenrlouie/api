@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"strings"
 
 	loads "github.com/go-openapi/loads"
 	flag "github.com/spf13/pflag"
@@ -43,7 +42,6 @@ func main() {
 	flag.Parse()
 	api := operations.NewOptikonAPI(swaggerSpec)
 	setHandlers(api)
-	processFlags()
 
 	// get server with flag values filled out
 	server = restapi.NewServer(api)
@@ -69,8 +67,4 @@ func setHandlers(api *operations.OptikonAPI) {
 	api.ClustersGetClusterByIDHandler = handlers.NewGetClusterByID()
 	api.ClustersUpdateClusterHandler = handlers.NewUpdateCluster()
 	api.ClustersDeleteClusterHandler = handlers.NewDeleteCluster()
-}
-
-func processFlags() {
-	restapi.TillersList = strings.Split(restapi.TillersString, ",")
 }

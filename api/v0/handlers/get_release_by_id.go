@@ -5,6 +5,7 @@ import (
 	"path"
 
 	"github.com/go-openapi/runtime/middleware"
+	"wwwin-github.cisco.com/edge/optikon-api/api/v0/clusterregistry"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/mock"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/models"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/restapi"
@@ -17,11 +18,19 @@ func NewGetReleaseByID() *getReleaseById {
 
 type getReleaseById struct{}
 
+// Not Implemented
 func (d *getReleaseById) Handle(params releases.GetReleaseByIDParams) middleware.Responder {
 	fmt.Printf("GetReleaseById: %s\n", params.ReleaseID)
 	if restapi.MockBasePath != "" {
 		return d.MockHandle(params)
 	}
+
+	_, err := clusterregistry.GetTillers(params.Labels)
+	if err != nil {
+		return releases.NewGetReleaseByIDBadRequest()
+	}
+	// do something with this tiller list.
+
 	return releases.NewGetReleaseByIDOK()
 }
 

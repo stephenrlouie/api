@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/go-openapi/runtime/middleware"
+	"wwwin-github.cisco.com/edge/optikon-api/api/v0/clusterregistry"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/helm"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/mock"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/restapi"
@@ -24,12 +25,18 @@ func (d *updateRelease) Handle(params releases.UpdateReleaseParams) middleware.R
 		return d.MockHandle(params)
 	}
 
+	tillers, err := clusterregistry.GetTillers(params.Labels)
+	if err != nil {
+		fmt.Printf("Error: Failed to find tillers: %v", err)
+		return releases.NewGetReleasesInternalServerError()
+	}
+
 	// TODO Async this
-	for _, tiller := range restapi.TillersList {
+	for _, tiller := range tillers {
 		tillerClient := helm.NewTillerClient(5 * time.Second)
 		err := tillerClient.UpdateRelease(tiller, params.ReleaseID, &params.ChartTar)
 		if err != nil {
-			fmt.Printf("Failed to install Release: %v\n", err)
+			fmt.Printf("Error: Failed to install Release: %v on tiller: %s\n", err, tiller)
 			return releases.NewUpdateReleaseInternalServerError()
 		}
 	}

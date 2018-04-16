@@ -62,6 +62,11 @@ for the delete release operation typically these are written to a http.Request
 */
 type DeleteReleaseParams struct {
 
+	/*Labels
+	  The node labels to identify applicable clusters
+
+	*/
+	Labels *string
 	/*ReleaseID
 	  ID of release to return
 
@@ -106,6 +111,17 @@ func (o *DeleteReleaseParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
+// WithLabels adds the labels to the delete release params
+func (o *DeleteReleaseParams) WithLabels(labels *string) *DeleteReleaseParams {
+	o.SetLabels(labels)
+	return o
+}
+
+// SetLabels adds the labels to the delete release params
+func (o *DeleteReleaseParams) SetLabels(labels *string) {
+	o.Labels = labels
+}
+
 // WithReleaseID adds the releaseID to the delete release params
 func (o *DeleteReleaseParams) WithReleaseID(releaseID string) *DeleteReleaseParams {
 	o.SetReleaseID(releaseID)
@@ -124,6 +140,22 @@ func (o *DeleteReleaseParams) WriteToRequest(r runtime.ClientRequest, reg strfmt
 		return err
 	}
 	var res []error
+
+	if o.Labels != nil {
+
+		// query param labels
+		var qrLabels string
+		if o.Labels != nil {
+			qrLabels = *o.Labels
+		}
+		qLabels := qrLabels
+		if qLabels != "" {
+			if err := r.SetQueryParam("labels", qLabels); err != nil {
+				return err
+			}
+		}
+
+	}
 
 	// path param releaseId
 	if err := r.SetPathParam("releaseId", o.ReleaseID); err != nil {
