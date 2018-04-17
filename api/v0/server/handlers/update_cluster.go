@@ -9,7 +9,7 @@ import (
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/convert"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/mock"
 
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/restapi"
+	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/config"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/restapi/operations/clusters"
 )
 
@@ -20,13 +20,13 @@ func NewUpdateCluster() *updateCluster {
 type updateCluster struct{}
 
 func (d *updateCluster) Handle(params clusters.UpdateClusterParams) middleware.Responder {
-	if restapi.MockBasePath != "" {
+	if config.MockBasePath != "" {
 		return d.MockHandle(params)
 	}
 
 	conv := convert.OptikonToRegCluster(*params.Body)
 
-	updatedCluster, err := restapi.ClusterClient.ClusterregistryV1alpha1().Clusters().Update(conv)
+	updatedCluster, err := config.ClusterClient.ClusterregistryV1alpha1().Clusters().Update(conv)
 	if err != nil {
 		fmt.Println(err)
 		return clusters.NewAddClusterInternalServerError()
@@ -37,7 +37,7 @@ func (d *updateCluster) Handle(params clusters.UpdateClusterParams) middleware.R
 
 func (d *updateCluster) MockHandle(params clusters.UpdateClusterParams) middleware.Responder {
 	statusCode, err := mock.GetMock(
-		path.Join(restapi.MockBasePath, fmt.Sprintf("update-cluster-%s.json", params.ClusterID)), nil)
+		path.Join(config.MockBasePath, fmt.Sprintf("update-cluster-%s.json", params.ClusterID)), nil)
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
 		return clusters.NewUpdateClusterInternalServerError()

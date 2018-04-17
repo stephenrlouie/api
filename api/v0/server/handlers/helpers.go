@@ -1,4 +1,4 @@
-package clusterregistry
+package handlers
 
 import (
 	"fmt"
@@ -6,13 +6,13 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/convert"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/models"
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/restapi"
+	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/config"
 )
 
 const TILLERKEY = "Tiller"
 
 func GetClusters(labels *string) ([]*models.IoK8sClusterRegistryPkgApisClusterregistryV1alpha1Cluster, error) {
-	list, err := restapi.ClusterClient.ClusterregistryV1alpha1().Clusters().List(v1.ListOptions{LabelSelector: safeLabels(labels)})
+	list, err := config.ClusterClient.ClusterregistryV1alpha1().Clusters().List(v1.ListOptions{LabelSelector: safeLabels(labels)})
 
 	conv := convert.RegToOptikonClusters(list)
 

@@ -12,7 +12,7 @@ import (
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/mock"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/models"
 
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/restapi"
+	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/config"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/restapi/operations/clusters"
 )
 
@@ -23,12 +23,12 @@ func NewGetClusterByID() *getClusterById {
 type getClusterById struct{}
 
 func (d *getClusterById) Handle(params clusters.GetClusterByIDParams) middleware.Responder {
-	if restapi.MockBasePath != "" {
+	if config.MockBasePath != "" {
 		return d.MockHandle(params)
 	}
 
 	// Call cluster registry
-	regCluster, err := restapi.ClusterClient.ClusterregistryV1alpha1().Clusters().Get(params.ClusterID, v1.GetOptions{})
+	regCluster, err := config.ClusterClient.ClusterregistryV1alpha1().Clusters().Get(params.ClusterID, v1.GetOptions{})
 	if err != nil {
 		fmt.Println(err)
 		return clusters.NewGetClusterByIDInternalServerError()
@@ -37,7 +37,7 @@ func (d *getClusterById) Handle(params clusters.GetClusterByIDParams) middleware
 	conv := convert.RegToOptikonCluster(*regCluster)
 
 	// Use regular kube api client for this cluster, to get # pods
-	pods, err := restapi.EdgeClients[conv.Metadata.Name].CoreV1().Pods("").List(metav1.ListOptions{})
+	pods, err := config.EdgeClients[conv.Metadata.Name].CoreV1().Pods("").List(metav1.ListOptions{})
 	if err != nil {
 		fmt.Println(err)
 		return clusters.NewGetClusterByIDInternalServerError()
@@ -49,7 +49,7 @@ func (d *getClusterById) Handle(params clusters.GetClusterByIDParams) middleware
 func (d *getClusterById) MockHandle(params clusters.GetClusterByIDParams) middleware.Responder {
 	payload := models.IoK8sClusterRegistryPkgApisClusterregistryV1alpha1Cluster{}
 	statusCode, err := mock.GetMock(
-		path.Join(restapi.MockBasePath, fmt.Sprintf("get-cluster-%s.json", params.ClusterID)), &payload)
+		path.Join(config.MockBasePath, fmt.Sprintf("get-cluster-%s.json", params.ClusterID)), &payload)
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
 		return clusters.NewGetClusterByIDInternalServerError()

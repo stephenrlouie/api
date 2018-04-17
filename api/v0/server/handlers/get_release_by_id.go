@@ -5,10 +5,9 @@ import (
 	"path"
 
 	"github.com/go-openapi/runtime/middleware"
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/clusterregistry"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/mock"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/models"
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/restapi"
+	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/config"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/restapi/operations/releases"
 )
 
@@ -21,11 +20,11 @@ type getReleaseById struct{}
 // Not Implemented
 func (d *getReleaseById) Handle(params releases.GetReleaseByIDParams) middleware.Responder {
 	fmt.Printf("GetReleaseById: %s\n", params.ReleaseID)
-	if restapi.MockBasePath != "" {
+	if config.MockBasePath != "" {
 		return d.MockHandle(params)
 	}
 
-	_, err := clusterregistry.GetTillers(params.Labels)
+	_, err := GetTillers(params.Labels)
 	if err != nil {
 		return releases.NewGetReleaseByIDBadRequest()
 	}
@@ -37,7 +36,7 @@ func (d *getReleaseById) Handle(params releases.GetReleaseByIDParams) middleware
 func (d *getReleaseById) MockHandle(params releases.GetReleaseByIDParams) middleware.Responder {
 	payload := models.ReleaseRelease{}
 	statusCode, err := mock.GetMock(
-		path.Join(restapi.MockBasePath, fmt.Sprintf("get-release-%s.json", params.ReleaseID)), &payload)
+		path.Join(config.MockBasePath, fmt.Sprintf("get-release-%s.json", params.ReleaseID)), &payload)
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
 		return releases.NewGetReleaseByIDInternalServerError()

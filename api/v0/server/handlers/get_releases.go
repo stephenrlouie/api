@@ -6,11 +6,10 @@ import (
 	"time"
 
 	"github.com/go-openapi/runtime/middleware"
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/clusterregistry"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/helm"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/mock"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/models"
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/restapi"
+	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/config"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/restapi/operations/releases"
 )
 
@@ -22,12 +21,12 @@ type getReleases struct{}
 
 func (d *getReleases) Handle(params releases.GetReleasesParams) middleware.Responder {
 	fmt.Printf("GetReleases\n")
-	if restapi.MockBasePath != "" {
+	if config.MockBasePath != "" {
 		return d.MockHandle(params)
 	}
 
 	var labels *string
-	tillersMap, err := clusterregistry.GetTillersToClusterName(labels)
+	tillersMap, err := GetTillersToClusterName(labels)
 	if err != nil {
 		fmt.Printf("Error: Failed to get map of tiller -> cluster name: %v", err)
 		return releases.NewGetReleasesInternalServerError()
@@ -56,7 +55,7 @@ func (d *getReleases) Handle(params releases.GetReleasesParams) middleware.Respo
 
 func (d *getReleases) MockHandle(params releases.GetReleasesParams) middleware.Responder {
 	payload := models.GetReleasesOKBody{}
-	statusCode, err := mock.GetMock(path.Join(restapi.MockBasePath, "get-releases.json"), &payload)
+	statusCode, err := mock.GetMock(path.Join(config.MockBasePath, "get-releases.json"), &payload)
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
 		return releases.NewGetReleasesInternalServerError()

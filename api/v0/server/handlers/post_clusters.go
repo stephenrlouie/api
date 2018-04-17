@@ -11,8 +11,8 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/convert"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/mock"
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/restapi"
 
+	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/config"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/restapi/operations/clusters"
 )
 
@@ -23,14 +23,14 @@ func NewAddCluster() *addCluster {
 type addCluster struct{}
 
 func (d *addCluster) Handle(params clusters.AddClusterParams) middleware.Responder {
-	if restapi.MockBasePath != "" {
+	if config.MockBasePath != "" {
 		return d.MockHandle(params)
 	}
 
 	conv := convert.OptikonToRegCluster(*params.Body)
 
 	// --------------- add cluster to central cluster-registry --------------- --------------- ---------------
-	createdCluster, err := restapi.ClusterClient.ClusterregistryV1alpha1().Clusters().Create(conv)
+	createdCluster, err := config.ClusterClient.ClusterregistryV1alpha1().Clusters().Create(conv)
 	if err != nil {
 		fmt.Println(err)
 		return clusters.NewAddClusterInternalServerError()
@@ -51,7 +51,7 @@ func (d *addCluster) Handle(params clusters.AddClusterParams) middleware.Respond
 			if err != nil {
 				log.Fatalf("Error building kubernetes clientset: %s\n", err.Error())
 			}
-			restapi.EdgeClients[createdCluster.GetName()] = temp
+			config.EdgeClients[createdCluster.GetName()] = temp
 			fmt.Println("added new edge client")
 		}
 	}
@@ -61,7 +61,7 @@ func (d *addCluster) Handle(params clusters.AddClusterParams) middleware.Respond
 }
 
 func (d *addCluster) MockHandle(params clusters.AddClusterParams) middleware.Responder {
-	statusCode, err := mock.GetMock(path.Join(restapi.MockBasePath, "add-clusters.json"), nil)
+	statusCode, err := mock.GetMock(path.Join(config.MockBasePath, "add-clusters.json"), nil)
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
 		return clusters.NewAddClusterInternalServerError()

@@ -8,7 +8,7 @@ import (
 	"github.com/go-openapi/runtime/middleware"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/helm"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/mock"
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/restapi"
+	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/config"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/restapi/operations/releases"
 )
 
@@ -20,7 +20,7 @@ type deleteRelease struct{}
 
 func (d *deleteRelease) Handle(params releases.DeleteReleaseParams) middleware.Responder {
 	fmt.Printf("deleteRelease: %s\n", params.ReleaseID)
-	if restapi.MockBasePath != "" {
+	if config.MockBasePath != "" {
 		return d.MockHandle(params)
 	}
 
@@ -45,7 +45,7 @@ func (d *deleteRelease) Handle(params releases.DeleteReleaseParams) middleware.R
 
 func (d *deleteRelease) MockHandle(params releases.DeleteReleaseParams) middleware.Responder {
 	statusCode, err := mock.GetMock(
-		path.Join(restapi.MockBasePath, fmt.Sprintf("delete-release-%s.json", params.ReleaseID)), nil)
+		path.Join(config.MockBasePath, fmt.Sprintf("delete-release-%s.json", params.ReleaseID)), nil)
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
 		return releases.NewDeleteReleaseInternalServerError()

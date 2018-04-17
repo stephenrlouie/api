@@ -6,10 +6,9 @@ import (
 	"time"
 
 	"github.com/go-openapi/runtime/middleware"
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/clusterregistry"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/helm"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/mock"
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/restapi"
+	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/config"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/restapi/operations/releases"
 )
 
@@ -21,11 +20,11 @@ type updateRelease struct{}
 
 func (d *updateRelease) Handle(params releases.UpdateReleaseParams) middleware.Responder {
 	fmt.Printf("updateRelease: %s\n", params.ReleaseID)
-	if restapi.MockBasePath != "" {
+	if config.MockBasePath != "" {
 		return d.MockHandle(params)
 	}
 
-	tillers, err := clusterregistry.GetTillers(params.Labels)
+	tillers, err := GetTillers(params.Labels)
 	if err != nil {
 		fmt.Printf("Error: Failed to find tillers: %v", err)
 		return releases.NewGetReleasesInternalServerError()
@@ -46,7 +45,7 @@ func (d *updateRelease) Handle(params releases.UpdateReleaseParams) middleware.R
 
 func (d *updateRelease) MockHandle(params releases.UpdateReleaseParams) middleware.Responder {
 	statusCode, err := mock.GetMock(
-		path.Join(restapi.MockBasePath, fmt.Sprintf("update-release-%s.json", params.ReleaseID)), nil)
+		path.Join(config.MockBasePath, fmt.Sprintf("update-release-%s.json", params.ReleaseID)), nil)
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
 		return releases.NewUpdateReleaseInternalServerError()

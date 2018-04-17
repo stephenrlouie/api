@@ -10,8 +10,8 @@ import (
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/convert"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/mock"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/models"
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/restapi"
 
+	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/config"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/restapi/operations/clusters"
 )
 
@@ -23,12 +23,12 @@ type getClusters struct{}
 
 func (d *getClusters) Handle(params clusters.GetClustersParams) middleware.Responder {
 	fmt.Printf("getClusters\n")
-	if restapi.MockBasePath != "" {
+	if config.MockBasePath != "" {
 		return d.MockHandle(params)
 	}
 
 	// Call cluster registry
-	allClusters, err := restapi.ClusterClient.ClusterregistryV1alpha1().Clusters().List(metav1.ListOptions{})
+	allClusters, err := config.ClusterClient.ClusterregistryV1alpha1().Clusters().List(metav1.ListOptions{})
 	if err != nil {
 		fmt.Println(err)
 		return clusters.NewGetClustersInternalServerError()
@@ -36,15 +36,18 @@ func (d *getClusters) Handle(params clusters.GetClustersParams) middleware.Respo
 
 	conv := convert.RegToOptikonClusters(allClusters)
 
+	// Get # of pods for this cluster ("health")
 	for _, cl := range conv {
-		// Use regular kube api client for this cluster, to get # pods
-		fmt.Printf("\n\n\n EDGE CLIENTS IS: %+v\n\n\n", restapi.EdgeClients)
-		pods, err := restapi.EdgeClients[cl.Metadata.Name].CoreV1().Pods("").List(metav1.ListOptions{})
-		if err != nil {
-			fmt.Println(err)
-			return clusters.NewGetClustersInternalServerError()
+		if _, ok := config.EdgeClients[cl.Metadata.Name]; !ok {
+			fmt.Printf("Cannot get pods for cluster, No client-go API client for edge cluster=%s\n", cl.Metadata.Name)
+		} else {
+			pods, err := config.EdgeClients[cl.Metadata.Name].CoreV1().Pods("").List(metav1.ListOptions{})
+			if err != nil {
+				fmt.Println(err)
+				return clusters.NewGetClustersInternalServerError()
+			}
+			cl.Metadata.Annotations["NumPods"] = strconv.Itoa(len(pods.Items))
 		}
-		cl.Metadata.Annotations["NumPods"] = strconv.Itoa(len(pods.Items))
 	}
 
 	return clusters.NewGetClustersOK().WithPayload(conv)
@@ -52,7 +55,7 @@ func (d *getClusters) Handle(params clusters.GetClustersParams) middleware.Respo
 
 func (d *getClusters) MockHandle(params clusters.GetClustersParams) middleware.Responder {
 	payload := models.GetClustersOKBody{}
-	statusCode, err := mock.GetMock(path.Join(restapi.MockBasePath, "get-clusters.json"), &payload)
+	statusCode, err := mock.GetMock(path.Join(config.MockBasePath, "get-clusters.json"), &payload)
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
 		return clusters.NewGetClustersInternalServerError()

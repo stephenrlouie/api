@@ -10,7 +10,6 @@ import (
 	loads "github.com/go-openapi/loads"
 	flag "github.com/spf13/pflag"
 
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/handlers"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/restapi"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/restapi/operations"
 )
@@ -41,30 +40,15 @@ func main() {
 	// parse the CLI flags
 	flag.Parse()
 	api := operations.NewOptikonAPI(swaggerSpec)
-	setHandlers(api)
 
 	// get server with flag values filled out
 	server = restapi.NewServer(api)
-
+	server.ConfigureAPI()
+	server.ConfigureFlags()
 	defer server.Shutdown()
 
 	//server.ConfigureAPI()
 	if err := server.Serve(); err != nil {
 		log.Fatalln(err)
 	}
-
-}
-
-func setHandlers(api *operations.OptikonAPI) {
-	api.ReleasesGetReleasesHandler = handlers.NewGetReleases()
-	api.ReleasesAddReleasesHandler = handlers.NewAddRelease()
-	api.ReleasesGetReleaseByIDHandler = handlers.NewGetReleaseByID()
-	api.ReleasesUpdateReleaseHandler = handlers.NewUpdateRelease()
-	api.ReleasesDeleteReleaseHandler = handlers.NewDeleteRelease()
-
-	api.ClustersGetClustersHandler = handlers.NewGetClusters()
-	api.ClustersAddClusterHandler = handlers.NewAddCluster()
-	api.ClustersGetClusterByIDHandler = handlers.NewGetClusterByID()
-	api.ClustersUpdateClusterHandler = handlers.NewUpdateCluster()
-	api.ClustersDeleteClusterHandler = handlers.NewDeleteCluster()
 }
