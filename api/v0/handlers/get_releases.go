@@ -26,13 +26,8 @@ func (d *getReleases) Handle(params releases.GetReleasesParams) middleware.Respo
 		return d.MockHandle(params)
 	}
 
-	tillers, err := clusterregistry.GetTillers(params.Labels)
-	if err != nil {
-		fmt.Printf("Error: Failed to find tillers: %v", err)
-		return releases.NewGetReleasesInternalServerError()
-	}
-
-	tillerCluster, err := clusterregistry.GetTillerToClusterName()
+	var labels *string
+	tillersMap, err := clusterregistry.GetTillersToClusterName(labels)
 	if err != nil {
 		fmt.Printf("Error: Failed to get map of tiller -> cluster name: %v", err)
 		return releases.NewGetReleasesInternalServerError()
@@ -40,19 +35,12 @@ func (d *getReleases) Handle(params releases.GetReleasesParams) middleware.Respo
 
 	// TODO: Async these requests to speed up.
 	var payload []*models.ReleaseRelease
-	for _, tiller := range tillers {
-
-		if _, ok := tillerCluster[tiller]; !ok {
-			fmt.Printf("Tiller %s not found in map", tiller)
-			return releases.NewGetReleasesInternalServerError()
-		}
-
-		clusterName := tillerCluster[tiller]
+	for tillerIP, clusterName := range tillersMap {
 
 		tillerClient := helm.NewTillerClient(5 * time.Second)
-		singleResult, err := tillerClient.ListReleases(tiller)
+		singleResult, err := tillerClient.ListReleases(tillerIP)
 		if err != nil {
-			fmt.Printf("Error: Failed to read Releases: %v on tiller: %s\n", err, tiller)
+			fmt.Printf("Error: Failed to read Releases: %v on tiller: %s\n", err, tillerIP)
 			return releases.NewGetReleasesInternalServerError()
 		}
 

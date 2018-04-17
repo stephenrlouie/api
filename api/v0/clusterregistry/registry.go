@@ -39,12 +39,10 @@ func GetTillers(labels *string) ([]string, error) {
 	return ret, nil
 }
 
-// TODO - clean up how we do this -- really clunky right now / purpose built functions
-func GetTillerToClusterName() (map[string]string, error) {
+func GetTillersToClusterName(labels *string) (map[string]string, error) {
 	output := map[string]string{}
 
-	labels := ""
-	list, err := GetClusters(&labels)
+	list, err := GetClusters(labels)
 	if err != nil {
 		fmt.Printf("Error: Searching for clusters with labels %v", err)
 		return output, err
