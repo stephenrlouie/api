@@ -47,7 +47,7 @@ func main() {
 	server.ConfigureFlags()
 	defer server.Shutdown()
 
-	//server.ConfigureAPI()
+	server.ConfigureAPI()
 	if err := server.Serve(); err != nil {
 		log.Fatalln(err)
 	}

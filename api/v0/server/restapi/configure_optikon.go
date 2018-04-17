@@ -17,18 +17,15 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/cluster-registry/pkg/client/clientset_generated/clientset"
 
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/handlers"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/config"
+	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/handlers"
+
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/restapi/operations"
 )
 
 // This file is safe to edit. Once it exists it will not be overwritten
 
 //go:generate swagger generate server --target ../../server --name  --spec ../swagger.yaml --skip-models --exclude-main
-
-func init() {
-	config.Init()
-}
 
 func configureFlags(api *operations.OptikonAPI) {
 	//api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{}
@@ -75,11 +72,11 @@ func configureTLS(tlsConfig *tls.Config) {
 // This function can be called multiple times, depending on the number of serving schemes.
 // scheme value will be set accordingly: "http", "https" or "unix"
 func configureServer(s *graceful.Server, scheme, addr string) {
-	if MockBasePath != "" {
+	if config.MockBasePath != "" {
 		return
 	}
 	// Read in central kubeconfig
-	cfg, err := clientcmd.BuildConfigFromFlags(CentralKubeAPIUrl, CentralKubeconfig)
+	cfg, err := clientcmd.BuildConfigFromFlags(config.CentralKubeAPIUrl, config.CentralKubeconfig)
 	if err != nil {
 		log.Fatalf("Error building kubeconfig: %s\n", err.Error())
 	}
@@ -96,7 +93,7 @@ func configureServer(s *graceful.Server, scheme, addr string) {
 	log.Printf("Connected to central cluster- There are %d total pods\n", len(pods.Items))
 
 	//  set up cluster registry client connection
-	ClusterClient, err = clientset.NewForConfig(cfg)
+	config.ClusterClient, err = clientset.NewForConfig(cfg)
 	if err != nil {
 		log.Fatalf("Error reaching cluster-registry API: %s\n", err.Error())
 	}
