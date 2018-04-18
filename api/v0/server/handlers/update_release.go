@@ -3,7 +3,6 @@ package handlers
 import (
 	"fmt"
 	"path"
-	"time"
 
 	"github.com/go-openapi/runtime/middleware"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/helm"
@@ -30,14 +29,10 @@ func (d *updateRelease) Handle(params releases.UpdateReleaseParams) middleware.R
 		return releases.NewGetReleasesInternalServerError()
 	}
 
-	// TODO Async this
-	for _, tiller := range tillers {
-		tillerClient := helm.NewTillerClient(5 * time.Second)
-		err := tillerClient.UpdateRelease(tiller, params.ReleaseID, &params.ChartTar)
-		if err != nil {
-			fmt.Printf("Error: Failed to install Release: %v on tiller: %s\n", err, tiller)
-			return releases.NewUpdateReleaseInternalServerError()
-		}
+	err = helm.UpdateAllReleases(tillers, params.ReleaseID, &params.ChartTar)
+
+	if err != nil {
+		return releases.NewUpdateReleaseInternalServerError()
 	}
 
 	return releases.NewUpdateReleaseOK()

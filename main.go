@@ -43,7 +43,7 @@ func main() {
 
 	// get server with flag values filled out
 	server = restapi.NewServer(api)
-	server.ConfigureAPI()
+
 	server.ConfigureFlags()
 	defer server.Shutdown()
 

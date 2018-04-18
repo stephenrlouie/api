@@ -3,9 +3,6 @@ package handlers
 import (
 	"fmt"
 	"path"
-	"time"
-
-	"k8s.io/helm/pkg/chartutil"
 
 	"github.com/go-openapi/runtime/middleware"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/helm"
@@ -32,22 +29,11 @@ func (d *addRelease) Handle(params releases.AddReleasesParams) middleware.Respon
 		return releases.NewGetReleasesInternalServerError()
 	}
 
-	// NOTE - only loading the tar once
-	ch, err := chartutil.LoadArchive(&params.ChartTar)
+	err = helm.InstallAllReleases(tillers, &params.ChartTar, params.Name, params.Namespace)
 	if err != nil {
-		fmt.Printf("Chart load error: %v\n", err)
-		return releases.NewGetReleasesInternalServerError()
+		return releases.NewAddReleasesInternalServerError()
 	}
 
-	// TODO Async this
-	for _, tiller := range tillers {
-		tillerClient := helm.NewTillerClient(5 * time.Second)
-		err = tillerClient.InstallRelease(tiller, ch, params.Name, params.Namespace)
-		if err != nil {
-			fmt.Printf("Error: Failed to install Release: %v on tiller: %s\n", err, tiller)
-			return releases.NewAddReleasesInternalServerError()
-		}
-	}
 	return releases.NewAddReleasesCreated()
 }
 

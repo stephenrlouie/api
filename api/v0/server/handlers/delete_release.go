@@ -3,7 +3,6 @@ package handlers
 import (
 	"fmt"
 	"path"
-	"time"
 
 	"github.com/go-openapi/runtime/middleware"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/helm"
@@ -30,14 +29,9 @@ func (d *deleteRelease) Handle(params releases.DeleteReleaseParams) middleware.R
 		return releases.NewDeleteReleaseInternalServerError()
 	}
 
-	// TODO Async this
-	for _, tiller := range tillers {
-		tillerClient := helm.NewTillerClient(20 * time.Second)
-		err := tillerClient.DeleteRelease(tiller, params.ReleaseID)
-		if err != nil {
-			fmt.Printf("Error: Failed to delete Release: %v on tiller: %s\n", err, tiller)
-			return releases.NewDeleteReleaseInternalServerError()
-		}
+	err = helm.DeleteAllReleases(tillers, params.ReleaseID)
+	if err != nil {
+		return releases.NewDeleteReleaseInternalServerError()
 	}
 
 	return releases.NewDeleteReleaseOK()
