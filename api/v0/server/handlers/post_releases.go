@@ -18,7 +18,6 @@ func NewAddRelease() *addRelease {
 type addRelease struct{}
 
 func (d *addRelease) Handle(params releases.AddReleasesParams) middleware.Responder {
-	fmt.Printf("AddReleases\n")
 	if config.MockBasePath != "" {
 		return d.MockHandle(params)
 	}

@@ -19,7 +19,6 @@ type getReleaseById struct{}
 
 // Not Implemented
 func (d *getReleaseById) Handle(params releases.GetReleaseByIDParams) middleware.Responder {
-	fmt.Printf("GetReleaseById: %s\n", params.ReleaseID)
 	if config.MockBasePath != "" {
 		return d.MockHandle(params)
 	}

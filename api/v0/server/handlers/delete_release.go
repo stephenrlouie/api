@@ -18,7 +18,6 @@ func NewDeleteRelease() *deleteRelease {
 type deleteRelease struct{}
 
 func (d *deleteRelease) Handle(params releases.DeleteReleaseParams) middleware.Responder {
-	fmt.Printf("deleteRelease: %s\n", params.ReleaseID)
 	if config.MockBasePath != "" {
 		return d.MockHandle(params)
 	}

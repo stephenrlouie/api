@@ -94,7 +94,6 @@ func ListAllReleases(tillersMap map[string]string) ([]*models.ReleaseRelease, er
 }
 
 func (tc *tillerClient) listReleases(address string) (obj []*models.ReleaseRelease, retErr error) {
-	fmt.Printf("List Release Request: %s\n", address)
 	tc.execute(address, func(rsc tiller.ReleaseServiceClient, ctx context.Context, cancel context.CancelFunc) {
 		req := tiller.ListReleasesRequest{}
 		defer cancel()
