@@ -22,7 +22,6 @@ func NewGetClusters() *getClusters {
 type getClusters struct{}
 
 func (d *getClusters) Handle(params clusters.GetClustersParams) middleware.Responder {
-	fmt.Printf("getClusters\n")
 	if config.MockBasePath != "" {
 		return d.MockHandle(params)
 	}

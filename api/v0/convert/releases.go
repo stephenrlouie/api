@@ -1,8 +1,6 @@
 package convert
 
 import (
-	"fmt"
-
 	"k8s.io/helm/pkg/proto/hapi/release"
 	"k8s.io/helm/pkg/timeconv"
 	"wwwin-github.cisco.com/edge/optikon-api/api/v0/models"
@@ -10,7 +8,6 @@ import (
 
 // Takes GRPC release structure and converts it to opitkon API structure
 func ReleaseToJSON(rel *release.Release) (*models.ReleaseRelease, error) {
-	fmt.Printf("ReleaseToJSON\n")
 	hks, err := HooksToJSON(rel.Hooks)
 	if err != nil {
 		return &models.ReleaseRelease{}, err
