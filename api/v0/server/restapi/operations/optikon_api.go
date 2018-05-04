@@ -19,8 +19,8 @@ import (
 	strfmt "github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/restapi/operations/clusters"
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/restapi/operations/releases"
+	"github.com/optikon/api/api/v0/server/restapi/operations/clusters"
+	"github.com/optikon/api/api/v0/server/restapi/operations/releases"
 )
 
 // NewOptikonAPI creates a new Optikon instance

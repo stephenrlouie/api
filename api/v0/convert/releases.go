@@ -3,7 +3,7 @@ package convert
 import (
 	"k8s.io/helm/pkg/proto/hapi/release"
 	"k8s.io/helm/pkg/timeconv"
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/models"
+	"github.com/optikon/api/api/v0/models"
 )
 
 // Takes GRPC release structure and converts it to opitkon API structure

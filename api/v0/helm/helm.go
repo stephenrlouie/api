@@ -7,15 +7,15 @@ import (
 	"sync"
 	"time"
 
+	"github.com/optikon/api/api/v0/client/releases"
+	"github.com/optikon/api/api/v0/convert"
+	"github.com/optikon/api/api/v0/models"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 	"k8s.io/helm/pkg/chartutil"
 	"k8s.io/helm/pkg/proto/hapi/chart"
 	tiller "k8s.io/helm/pkg/proto/hapi/services"
 	"k8s.io/helm/pkg/version"
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/client/releases"
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/convert"
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/models"
 )
 
 type tillerClient struct {

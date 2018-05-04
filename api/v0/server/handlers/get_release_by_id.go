@@ -5,10 +5,10 @@ import (
 	"path"
 
 	"github.com/go-openapi/runtime/middleware"
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/mock"
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/models"
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/config"
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/restapi/operations/releases"
+	"github.com/optikon/api/api/v0/mock"
+	"github.com/optikon/api/api/v0/models"
+	"github.com/optikon/api/api/v0/server/config"
+	"github.com/optikon/api/api/v0/server/restapi/operations/releases"
 )
 
 func NewGetReleaseByID() *getReleaseById {

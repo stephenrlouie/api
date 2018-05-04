@@ -8,12 +8,12 @@ import (
 	"github.com/go-openapi/runtime/middleware"
 	"k8s.io/apimachinery/pkg/apis/meta/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/convert"
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/mock"
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/models"
+	"github.com/optikon/api/api/v0/convert"
+	"github.com/optikon/api/api/v0/mock"
+	"github.com/optikon/api/api/v0/models"
 
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/config"
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/restapi/operations/clusters"
+	"github.com/optikon/api/api/v0/server/config"
+	"github.com/optikon/api/api/v0/server/restapi/operations/clusters"
 )
 
 func NewGetClusterByID() *getClusterById {

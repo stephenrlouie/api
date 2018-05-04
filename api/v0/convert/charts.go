@@ -3,7 +3,7 @@ package convert
 import (
 	"github.com/golang/protobuf/ptypes/any"
 	"k8s.io/helm/pkg/proto/hapi/chart"
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/models"
+	"github.com/optikon/api/api/v0/models"
 )
 
 func ChartToJSON(chart *chart.Chart) *models.ChartChart {

@@ -13,7 +13,7 @@ import (
 
 	strfmt "github.com/go-openapi/strfmt"
 
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/models"
+	"github.com/optikon/api/api/v0/models"
 )
 
 // DeleteReleaseReader is a Reader for the DeleteRelease structure.

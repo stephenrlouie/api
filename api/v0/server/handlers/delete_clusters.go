@@ -6,9 +6,9 @@ import (
 
 	"github.com/go-openapi/runtime/middleware"
 	"k8s.io/apimachinery/pkg/apis/meta/v1"
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/mock"
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/config"
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/restapi/operations/clusters"
+	"github.com/optikon/api/api/v0/mock"
+	"github.com/optikon/api/api/v0/server/config"
+	"github.com/optikon/api/api/v0/server/restapi/operations/clusters"
 )
 
 func NewDeleteCluster() *deleteCluster {

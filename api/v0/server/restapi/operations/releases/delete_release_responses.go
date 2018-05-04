@@ -10,7 +10,7 @@ import (
 
 	"github.com/go-openapi/runtime"
 
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/models"
+	"github.com/optikon/api/api/v0/models"
 )
 
 // DeleteReleaseOKCode is the HTTP code returned for type DeleteReleaseOK

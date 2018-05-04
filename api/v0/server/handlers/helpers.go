@@ -4,9 +4,9 @@ import (
 	"fmt"
 
 	"k8s.io/apimachinery/pkg/apis/meta/v1"
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/convert"
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/models"
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/config"
+	"github.com/optikon/api/api/v0/convert"
+	"github.com/optikon/api/api/v0/models"
+	"github.com/optikon/api/api/v0/server/config"
 )
 
 const TILLERKEY = "Tiller"

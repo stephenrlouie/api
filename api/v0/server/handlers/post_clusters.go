@@ -9,11 +9,11 @@ import (
 	"github.com/go-openapi/runtime/middleware"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/convert"
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/mock"
+	"github.com/optikon/api/api/v0/convert"
+	"github.com/optikon/api/api/v0/mock"
 
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/config"
-	"wwwin-github.cisco.com/edge/optikon-api/api/v0/server/restapi/operations/clusters"
+	"github.com/optikon/api/api/v0/server/config"
+	"github.com/optikon/api/api/v0/server/restapi/operations/clusters"
 )
 
 func NewAddCluster() *addCluster {
