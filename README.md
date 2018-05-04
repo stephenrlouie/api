@@ -14,7 +14,7 @@ See the `docs/` folder in this repo for an architecture diagram.
 
 ## Installation
 
-These examples shows how to run the API using mock handlers. See the [optikon-vagrant](https://github.com/optikon/optikon-vagrant) docs for information on deploying the Optikon API in kubernetes, next to a live Cluster Registry API.
+These examples shows how to run the API using mock handlers. See the [optikon-vagrant](https://github.com/optikon/vagrant) docs for information on deploying the Optikon API in kubernetes, next to a live Cluster Registry API.
 
 ### Run in Docker
 
