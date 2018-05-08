@@ -2,7 +2,7 @@
 SHORT_SHA=`echo ${TRAVIS_COMMIT::7}`
 REPO=optikon/api
 
-docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}
+echo "${DOCKER_PASS}" | docker login -u ${DOCKER_USER} --password-stdin
 
 # If the tag is undefined
 if [ ! -z $TRAVIS_TAG ]; then
