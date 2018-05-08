@@ -10,7 +10,7 @@ if [ ! -z $TRAVIS_TAG ]; then
   docker tag $REPO:$SHORT_SHA $REPO:$TRAVIS_TAG
   docker push $REPO:$TRAVIS_TAG
 # If the tag is set
-elif [ "$TRAVIS_BRANCH" == "master" ]; then
+elif [ "$TRAVIS_BRANCH" == "trav" ]; then
   echo "Master branch"
   docker push $REPO:$SHORT_SHA
   docker tag $REPO:$SHORT_SHA $REPO:latest
