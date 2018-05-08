@@ -6,6 +6,6 @@ services:
   - docker
 script:
   - make
-  - make container
+  - make container TAG=test
 notifications:
   email: false
