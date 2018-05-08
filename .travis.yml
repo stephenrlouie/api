@@ -1,0 +1,11 @@
+sudo: required
+language: go
+go:
+- 1.10.1
+services:
+  - docker
+script:
+  - make
+  - make container
+notifications:
+  email: false
