@@ -7,8 +7,6 @@ services:
 script:
   - make
   - make test
-  - export SHORT_SHA=${TRAVIS_COMMIT:6}
-  - make container TAG=$SHORT_SHA
-  - ./push-image.sh
+  - ./build-push-image.sh
 notifications:
   email: false
