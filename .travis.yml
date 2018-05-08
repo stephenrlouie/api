@@ -5,8 +5,8 @@ go:
 services:
   - docker
 script:
-  - make
-  - make test
+  # - make
+  # - make test
   - ./build-push-image.sh
 notifications:
   email: false
