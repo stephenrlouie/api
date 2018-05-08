@@ -1,8 +1,7 @@
 #!/bin/bash
-SHORT_SHA=${TRAVIS_COMMIT} | awk '{print substr($0,0,7)}'
+SHORT_SHA=`echo ${TRAVIS_COMMIT::7}
 REPO=optikon/api
-echo ${TRAVIS_COMMIT}
-echo "${TRAVIS_COMMIT}"
+echo $TRAVIS_COMMIT
 
 # If the tag is undefined
 if [ -z $TRAVIS_TAG ]; then
