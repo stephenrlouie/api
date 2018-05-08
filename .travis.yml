@@ -6,6 +6,7 @@ services:
   - docker
 script:
   - make
-  - make container TAG=test
+  - make test
+  - make container TAG=$TRAVIS_COMMIT
 notifications:
   email: false

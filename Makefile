@@ -3,7 +3,7 @@
 EXECUTABLE ?= optikon-api
 IMAGE ?= bin/$(EXECUTABLE)
 REPO = optikon/api
-TAG = 0.1.1
+TAG = latest
 
 all: build
 
