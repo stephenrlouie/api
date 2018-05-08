@@ -8,5 +8,6 @@ script:
   - make
   - make test
   - make container TAG=$TRAVIS_COMMIT
+  - ./push-image.sh
 notifications:
   email: false
